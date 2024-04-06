@@ -1,4 +1,5 @@
 import Image from "next/image";
+import SignOut from "./(components)/SignOut";
 
 export default function Home() {
   return (
@@ -25,6 +26,7 @@ export default function Home() {
               priority
             />
           </a>
+          <SignOut />
         </div>
       </div>
 
