@@ -4,6 +4,13 @@ import "./globals.css";
 import { getServerSession } from "next-auth";
 import SessionProvider from "./(components)/SessionProvider";
 import { UserProvder } from "./(components)/UserProvider";
+import TitleBar from "./(components)/Navigation/TitleBar";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
+import SideNavigator from "./(components)/Navigation/SideNavigator";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +31,23 @@ export default async function RootLayout({
       <body className={inter.className}>
         <SessionProvider session={session}>
           <UserProvder userInfo={{ name: session?.user?.name }}>
-            {children}
+            <main className="grid grid-rows-[3.5rem_1fr] h-dvh">
+              <TitleBar />
+              <ResizablePanelGroup direction="horizontal">
+                <ResizablePanel
+                  id="sidenavigator"
+                  minSize={10}
+                  defaultSize={15}
+                  maxSize={15}
+                >
+                  <SideNavigator />
+                </ResizablePanel>
+                <ResizableHandle />
+                <ResizablePanel id="content" defaultSize={85}>
+                  {children}
+                </ResizablePanel>
+              </ResizablePanelGroup>
+            </main>
           </UserProvder>
         </SessionProvider>
       </body>

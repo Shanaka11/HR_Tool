@@ -3,7 +3,7 @@ import Username from "./(components)/Username";
 
 export default function Home() {
   return (
-    <div className="h-screen w-screen grid place-items-center">
+    <div className="h-full w-full grid place-items-center">
       <div>
         <h1 className="text-5xl font-semibold ">
           Hi, <Username />
