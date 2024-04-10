@@ -1,9 +1,11 @@
 "use client";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
+import SideNavIist from "./SideNavIist";
+import SideNavFilter from "./SideNavFilter";
 
 // Make this a key value store (map)
 const navigator = new Map([
@@ -26,10 +28,20 @@ const navigator = new Map([
 const navigatorArray = Array.from(navigator);
 
 const SideNavigator = () => {
-  //TODO: Implement search
+  //TODO: Use debounce for the search, Takeout the search section to a separate component, use the debounce to update the parent state, keep a separate local state
 
   // Id of the root node
   const [rootNode, setRootNode] = useState<number[]>([-1]);
+  const [filterString, setFilterString] = useState<string>("");
+  const activeNavigator = useMemo(() => {
+    return navigatorArray.filter((navEntry) => {
+      if (filterString === "") return navEntry[1].parentNavId === rootNode[0];
+      return (
+        navEntry[1].link !== undefined &&
+        navEntry[1].label.toUpperCase().includes(filterString.toUpperCase())
+      );
+    });
+  }, [rootNode, filterString]);
   const pathname = usePathname();
   const navTitle = useMemo(() => {
     if (rootNode.length === 1) {
@@ -88,6 +100,9 @@ const SideNavigator = () => {
     return ret[0];
   };
 
+  const setParentFilterString = (value: string) => {
+    setFilterString(value);
+  };
   // Run this at the start only
   useEffect(() => {
     setRootNode(getBreadcrumbTrail(getNavIdForPage()));
@@ -95,9 +110,7 @@ const SideNavigator = () => {
 
   return (
     <>
-      <div className="w-full bg-slate-800 text-white text-xs p-2 py-1">
-        SEARCH
-      </div>
+      <SideNavFilter setParentFilterString={setParentFilterString} />
       {rootNode.length > 1 && (
         // This section is the breadcrumb
         <>
@@ -120,32 +133,12 @@ const SideNavigator = () => {
         </>
       )}
       <ScrollArea className="h-full w-full bg-slate-700">
-        {navigatorArray.map((item) => {
-          if (item[1].parentNavId !== rootNode[0]) return null;
-          if (item[1].link !== undefined) {
-            return (
-              <Link key={item[0]} className="text-white" href={item[1].link}>
-                <div
-                  className={`border-b border-b-slate-500 w-full h-full p-2 py-4 text-xs hover:bg-blue-400 cursor-pointer ${
-                    item[1].link === pathname && "border-l-4 border-l-blue-400"
-                  }`}
-                >
-                  {item[1].label}
-                </div>
-              </Link>
-            );
-          }
-          return (
-            <div
-              className="border-b border-b-slate-500 w-full h-full p-2 py-4 text-xs text-white flex justify-between hover:bg-blue-400 cursor-pointer"
-              key={item[0]}
-              onClick={() => handleNavOnClick(item[0])}
-            >
-              <span>{item[1].label}</span>
-              <ChevronRight size="15" className="text-white" />
-            </div>
-          );
-        })}
+        <SideNavIist
+          navItems={activeNavigator}
+          handleNavOnClick={handleNavOnClick}
+          // filterString={filterString}
+          // rootNode={rootNode[0]}
+        />
       </ScrollArea>
     </>
   );
