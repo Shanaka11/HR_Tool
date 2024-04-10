@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import SideNavIist from "./SideNavIist";
 import SideNavFilter from "./SideNavFilter";
+import { complexTextSearch } from "@/lib/complexTextSearch";
 
 // Make this a key value store (map)
 const navigator = new Map([
@@ -28,7 +29,7 @@ const navigator = new Map([
 const navigatorArray = Array.from(navigator);
 
 const SideNavigator = () => {
-  //TODO: Use debounce for the search, Takeout the search section to a separate component, use the debounce to update the parent state, keep a separate local state
+  //TODO: Update the filtering , try to match word for work i.e if we searcg t r then it should show all entries that have similar letter arrangement like time reporting, quick time reporting etc
 
   // Id of the root node
   const [rootNode, setRootNode] = useState<number[]>([-1]);
@@ -38,7 +39,7 @@ const SideNavigator = () => {
       if (filterString === "") return navEntry[1].parentNavId === rootNode[0];
       return (
         navEntry[1].link !== undefined &&
-        navEntry[1].label.toUpperCase().includes(filterString.toUpperCase())
+        complexTextSearch(navEntry[1].label, filterString)
       );
     });
   }, [rootNode, filterString]);

@@ -1,6 +1,6 @@
 import { useDebounce } from "@/lib/useDebounce";
 import { X } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type SideNavFilterProps = {
   setParentFilterString: (filterString: string) => void;
@@ -16,15 +16,16 @@ const SideNavFilter: React.FC<SideNavFilterProps> = ({
 
   const handleFilterStringOnChange = (value: string) => {
     setFilterString(value);
-    // Trigger this on a debounce
-    debouncedCallback();
-    // setParentFilterString(value);
   };
 
   const clearFilterString = () => {
     setFilterString("");
     setParentFilterString("");
   };
+
+  useEffect(() => {
+    debouncedCallback();
+  }, [filterString]);
 
   return (
     <div className="w-full bg-slate-800 text-white text-xs p-2 py-1 border-b border-b-slate-500 flex gap-1">
