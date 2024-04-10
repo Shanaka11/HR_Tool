@@ -20,6 +20,13 @@ const SideNavIist: React.FC<SideNavListProps> = ({
 }) => {
   const pathname = usePathname();
 
+  if (navItems.length === 0) {
+    return (
+      <div className="border-b border-b-slate-500 w-full h-full p-2 py-4 text-m text-white flex justify-between hover:bg-blue-400 cursor-pointer">
+        <span>We can't seem to find the page you are looking for.</span>
+      </div>
+    );
+  }
   return (
     <>
       {navItems.map((item) => {
