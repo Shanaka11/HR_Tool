@@ -1,5 +1,5 @@
 - Make the navigator responsive (Done)
-- Add loading screens
+- Add loading screens (Done) / For the main page
 - Configure the backend
 - Add pages to User, Company, Employee, Project, Activity, Customer entities
 - Create Time Report Page
@@ -7,4 +7,5 @@
 - Add export table functions (Excel)
 - Add export quick report fuction (Excel, Pdf)
 - Add permission features, 
+- Add loading skeletons to, list pages, form pages etc if needed
 

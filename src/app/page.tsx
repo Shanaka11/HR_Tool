@@ -1,7 +1,10 @@
 import SignOut from "./(components)/SignOut";
 import Username from "./(components)/Username";
 
-export default function Home() {
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+export default async function Home() {
   return (
     <div className="h-full w-full grid place-items-center">
       <div>
