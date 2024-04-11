@@ -1,6 +1,7 @@
 - Make the navigator responsive (Done)
 - Add loading screens (Done) / For the main page
-- Configure the backend
+- Finish the Title bar (Add signout feature) (Add home icon and user icon with the dropdown menu) (Done)
+- Configure the backend - (Drizzle, Database)
 - Add pages to User, Company, Employee, Project, Activity, Customer entities
 - Create Time Report Page
 - Create Quick Report Page
@@ -8,4 +9,5 @@
 - Add export quick report fuction (Excel, Pdf)
 - Add permission features, 
 - Add loading skeletons to, list pages, form pages etc if needed
+- Add themeing support
 

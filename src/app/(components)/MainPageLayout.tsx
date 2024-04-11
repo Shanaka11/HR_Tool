@@ -7,7 +7,6 @@ import {
 import React, { ReactNode } from "react";
 import SideNavigator from "./Navigation/SideNavigator";
 import { useNavStore } from "./Navigation/NavStore";
-import { useScreenSize } from "@/lib/useScreensize";
 
 type MainPageLayoutProps = {
   children: ReactNode;
@@ -15,7 +14,6 @@ type MainPageLayoutProps = {
 
 const MainPageLayout: React.FC<MainPageLayoutProps> = ({ children }) => {
   const sideNavOpen = useNavStore((state) => state.sideNavOpen);
-  const isScreensizeBigger = useScreenSize();
 
   return (
     <>
