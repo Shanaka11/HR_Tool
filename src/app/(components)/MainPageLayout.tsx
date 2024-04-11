@@ -7,6 +7,7 @@ import {
 import React, { ReactNode } from "react";
 import SideNavigator from "./Navigation/SideNavigator";
 import { useNavStore } from "./Navigation/NavStore";
+import { useScreenSize } from "@/lib/useScreensize";
 
 type MainPageLayoutProps = {
   children: ReactNode;
@@ -14,27 +15,41 @@ type MainPageLayoutProps = {
 
 const MainPageLayout: React.FC<MainPageLayoutProps> = ({ children }) => {
   const sideNavOpen = useNavStore((state) => state.sideNavOpen);
+  const isScreensizeBigger = useScreenSize();
+
   return (
-    <ResizablePanelGroup direction="horizontal">
-      {/* Try to animate this in and out */}
+    <>
       {sideNavOpen && (
-        <>
-          <ResizablePanel
-            id="sidenavigator"
-            order={1}
-            minSize={10}
-            defaultSize={15}
-            maxSize={25}
-          >
-            <SideNavigator />
-          </ResizablePanel>
-          <ResizableHandle />
-        </>
+        <div className="show md:hidden w-full absolute top-14 h-[calc(100dvh-3.5rem)] overflow-hidden">
+          <SideNavigator mobile={true} />
+        </div>
       )}
-      <ResizablePanel id="content" defaultSize={85} order={2}>
-        {children}
-      </ResizablePanel>
-    </ResizablePanelGroup>
+      <ResizablePanelGroup direction="horizontal">
+        {/* Try to animate this in and out */}
+        {sideNavOpen && (
+          <>
+            <ResizablePanel
+              id="sidenavigator"
+              order={1}
+              minSize={10}
+              defaultSize={15}
+              maxSize={25}
+              className="hidden md:block"
+            >
+              <SideNavigator />
+            </ResizablePanel>
+            <ResizableHandle className="hidden md:block" />
+          </>
+        )}
+        <ResizablePanel
+          id="content"
+          defaultSize={sideNavOpen ? 85 : 100}
+          order={2}
+        >
+          {children}
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    </>
   );
 };
 

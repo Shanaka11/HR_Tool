@@ -28,9 +28,11 @@ const navigator = new Map([
 
 const navigatorArray = Array.from(navigator);
 
-const SideNavigator = () => {
-  //TODO: Update the filtering , try to match word for work i.e if we searcg t r then it should show all entries that have similar letter arrangement like time reporting, quick time reporting etc
+type SideNavigatorProps = {
+  mobile: boolean;
+};
 
+const SideNavigator = ({ mobile = false }) => {
   // Id of the root node
   const [rootNode, setRootNode] = useState<number[]>([-1]);
   const [filterString, setFilterString] = useState<string>("");
