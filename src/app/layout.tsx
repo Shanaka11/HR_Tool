@@ -6,6 +6,7 @@ import SessionProvider from "./(components)/SessionProvider";
 import { UserProvder } from "./(components)/UserProvider";
 import TitleBar from "./(components)/Navigation/TitleBar";
 import MainPageLayout from "./(components)/MainPageLayout";
+import { Provider } from "jotai";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,10 +27,12 @@ export default async function RootLayout({
       <body className={inter.className}>
         <SessionProvider session={session}>
           <UserProvder userInfo={{ name: session?.user?.name }}>
-            <main className="grid grid-rows-[3.5rem_1fr] h-dvh">
-              <TitleBar />
-              <MainPageLayout>{children}</MainPageLayout>
-            </main>
+            <Provider>
+              <main className="grid grid-rows-[3.5rem_1fr] h-dvh">
+                <TitleBar />
+                <MainPageLayout>{children}</MainPageLayout>
+              </main>
+            </Provider>
           </UserProvder>
         </SessionProvider>
       </body>

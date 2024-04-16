@@ -1,16 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import React from "react";
-import { useNavStore } from "./NavStore";
+import { sideNavOpenAtom } from "./NavStore";
+
+import { useAtom } from "jotai";
 
 const OpenNavMenuButton = () => {
-  const { toggleSideNav, sideNavOpen } = useNavStore((state) => ({
-    toggleSideNav: state.toggleSideNav,
-    sideNavOpen: state.sideNavOpen,
-  }));
+  const [sideNavOpen, setSideNavOpen] = useAtom(sideNavOpenAtom);
 
   return (
-    <Button className="h-full rounded-none" onClick={toggleSideNav}>
+    <Button
+      className="h-full rounded-none"
+      onClick={() => setSideNavOpen((prevState) => !prevState)}
+    >
       {sideNavOpen ? (
         <>
           <X className="h-full fill-white md:hidden" />

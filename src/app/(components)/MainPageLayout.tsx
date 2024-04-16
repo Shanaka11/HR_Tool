@@ -6,14 +6,15 @@ import {
 } from "@/components/ui/resizable";
 import React, { ReactNode } from "react";
 import SideNavigator from "./Navigation/SideNavigator";
-import { useNavStore } from "./Navigation/NavStore";
+import { sideNavOpenAtom } from "./Navigation/NavStore";
+import { useAtom } from "jotai";
 
 type MainPageLayoutProps = {
   children: ReactNode;
 };
 
 const MainPageLayout: React.FC<MainPageLayoutProps> = ({ children }) => {
-  const sideNavOpen = useNavStore((state) => state.sideNavOpen);
+  const [sideNavOpen] = useAtom(sideNavOpenAtom);
 
   return (
     <>
