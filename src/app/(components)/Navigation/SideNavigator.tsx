@@ -1,7 +1,6 @@
 "use client";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import SideNavIist from "./SideNavIist";

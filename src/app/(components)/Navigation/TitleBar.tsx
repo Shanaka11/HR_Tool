@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button";
 import { HomeIcon, LogOut, Menu, Palette, Settings, X } from "lucide-react";
 import React from "react";
-import { useNavStore } from "./NavStore";
 import {
   DropdownMenu,
   DropdownMenuContent,
