@@ -19,6 +19,7 @@ export const useTable = <T>({ columns, data }: TableOptions<T>) => {
         return {
           id: column.id,
           header: column.header,
+          size: column.size,
         };
       });
   };

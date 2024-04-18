@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import React from "react";
-import { ColumnDef } from "./types";
+import { ColumnDef, ColumnSize } from "./types";
 import { useTable } from "./useTable";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -29,11 +29,18 @@ const DataTable = <T extends BaseDataItem>({
     columns: columnDefinition,
   });
 
+  const getColWidth = (size?: ColumnSize) => {
+    if (size === "LARGE") return "w-64";
+    if (size === "MEDIUM") return "w-40";
+    if (size === "SMALL") return "w-20";
+    return "w-auto min-w-40";
+  };
+
   return (
-    <Table>
+    <Table className="border-collapse table-fixed min-w-full">
       <TableHeader>
         <TableRow>
-          <TableHead>
+          <TableHead scope="row" className="w-8">
             <Checkbox
               className="block"
               //   onClick={(event) => selectRow(rowIndex, event.shiftKey)}
@@ -45,8 +52,15 @@ const DataTable = <T extends BaseDataItem>({
             />
           </TableHead>
           {table.getHeaders().map((header) => (
-            <TableHead key={header.id}>{header.header}</TableHead>
+            <TableHead
+              scope="col"
+              key={header.id}
+              className={`${getColWidth(header.size)}`}
+            >
+              {header.header}
+            </TableHead>
           ))}
+          <TableHead className="w-auto"></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

@@ -82,18 +82,22 @@ const page = () => {
       id: "2",
       header: "Name",
       getValue: (row) => row.name,
+      size: "LARGE",
     },
     {
       id: "3",
       header: "Contact Person",
       getValue: (row) => row.contactPerson,
+      size: "MEDIUM",
     },
   ];
 
   return (
     <>
       <h1>Projects</h1>
-      <DataTable data={projects} columnDefinition={columns} />
+      <div className="overflow-x-auto">
+        <DataTable data={projects} columnDefinition={columns} />
+      </div>
     </>
   );
 };
