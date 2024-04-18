@@ -6,6 +6,6 @@ export type ColumnDef<T> = {
   editable?: boolean;
   insertable?: boolean;
   sortable?: boolean;
-  visible?: boolean;
+  hidden?: boolean;
   filterable?: boolean;
 };

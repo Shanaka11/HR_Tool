@@ -13,12 +13,14 @@ export const useTable = <T>({ columns, data }: TableOptions<T>) => {
   }, [data]);
 
   const getHeaders = () => {
-    return columns.map((column) => {
-      return {
-        id: column.id,
-        header: column.header,
-      };
-    });
+    return columns
+      .filter((column) => !column.hidden)
+      .map((column) => {
+        return {
+          id: column.id,
+          header: column.header,
+        };
+      });
   };
 
   const getRows = () => {

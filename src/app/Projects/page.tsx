@@ -76,6 +76,7 @@ const page = () => {
       id: "1",
       header: "Id",
       getValue: (row) => row.id,
+      hidden: true,
     },
     {
       id: "2",
