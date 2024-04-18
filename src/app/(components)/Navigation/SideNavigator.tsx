@@ -18,7 +18,7 @@ const navigator = new Map([
   ],
   [2, { label: "Project Management", parentNavId: -1 }],
   [2.1, { label: "Project", parentNavId: 2, link: "/4123" }],
-  [2.2, { label: "Projects", parentNavId: 2, link: "/125" }],
+  [2.2, { label: "Projects", parentNavId: 2, link: "/Projects" }],
   [2.3, { label: "Basic Data", parentNavId: 2 }],
   [2.31, { label: "Project Basic Data", parentNavId: 2.3 }],
   [2.311, { label: "Project Types", parentNavId: 2.31, link: "/paso" }],
