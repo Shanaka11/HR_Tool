@@ -16,12 +16,23 @@ const DataTableRow = <T extends BaseDataItem>({
   columns,
 }: DataTableRowProps<T>) => {
   const [row, setRow] = useAtom(rowAtom);
+
+  const handleRowSelectOnClick = () => {
+    setRow((prevRow) => {
+      return {
+        ...prevRow,
+        selected: !prevRow.selected,
+      };
+    });
+  };
+
   return (
     <TableRow key={row.dataItem.id}>
       <TableCell>
         <Checkbox
           className="block"
           //   onClick={(event) => selectRow(rowIndex, event.shiftKey)}
+          onClick={handleRowSelectOnClick}
           checked={row.selected}
           //   checked={
           //     rows.filter((row, index) => index === rowIndex && row.isSelected)
