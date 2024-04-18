@@ -1,17 +1,7 @@
 import React from "react";
-import { ColumnDef } from "../(components)/Table/types";
-import { useTable } from "../(components)/Table/useTable";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import DataTable from "../(components)/Table/DataTable";
+import ProjectTable from "./(components)/ProjectTable";
 
-type Project = {
+export type Project = {
   id: string;
   name: string;
   contactPerson: string;
@@ -71,32 +61,11 @@ const projects: Project[] = [
 ];
 
 const page = () => {
-  const columns: ColumnDef<Project>[] = [
-    {
-      id: "1",
-      header: "Id",
-      getValue: (row) => row.id,
-      hidden: true,
-    },
-    {
-      id: "2",
-      header: "Name",
-      getValue: (row) => row.name,
-      size: "LARGE",
-    },
-    {
-      id: "3",
-      header: "Contact Person",
-      getValue: (row) => row.contactPerson,
-      size: "MEDIUM",
-    },
-  ];
-
   return (
     <>
       <h1>Projects</h1>
       <div className="overflow-x-auto">
-        <DataTable data={projects} columnDefinition={columns} />
+        <ProjectTable data={projects} />
       </div>
     </>
   );

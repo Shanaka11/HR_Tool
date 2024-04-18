@@ -11,4 +11,11 @@ export type ColumnDef<T> = {
   filterable?: boolean;
 };
 
+export type RowDef<T> = {
+  selected: boolean;
+  markedFor: MarkedFor;
+  dataItem: T;
+};
+
 export type ColumnSize = "SMALL" | "MEDIUM" | "LARGE";
+export type MarkedFor = "DELETE" | "INSERT" | "UPDATE" | "READ";

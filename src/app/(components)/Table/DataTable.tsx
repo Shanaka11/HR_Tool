@@ -1,3 +1,4 @@
+"use client";
 import {
   Table,
   TableBody,
@@ -6,12 +7,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
-import { ColumnDef, ColumnSize } from "./types";
+import React, { useRef } from "react";
+import { ColumnDef, ColumnSize, RowDef } from "./types";
 import { useTable } from "./useTable";
 import { Checkbox } from "@/components/ui/checkbox";
+import DataTableRow from "./DataTableRow";
+import { PrimitiveAtom, Provider, atom, useAtom, useStore } from "jotai";
+import { rowAtoms, rowsAtom } from "./DataTableStore";
 
-type BaseDataItem = {
+export type BaseDataItem = {
   id: string;
 };
 
@@ -24,6 +28,22 @@ const DataTable = <T extends BaseDataItem>({
   data,
   columnDefinition,
 }: DataTableProps<T>) => {
+  const store = useStore();
+  const loaded = useRef(false);
+
+  if (!loaded.current) {
+    store.set(
+      rowsAtom,
+      data.map((dataItem) => {
+        return {
+          selected: false,
+          markedFor: "READ" as const,
+          dataItem: dataItem,
+        };
+      })
+    );
+    loaded.current = true;
+  }
   const table = useTable({
     data,
     columns: columnDefinition,
@@ -35,6 +55,8 @@ const DataTable = <T extends BaseDataItem>({
     if (size === "SMALL") return "w-20";
     return "w-auto min-w-40";
   };
+
+  const [rowAtom] = useAtom(rowAtoms, { store: useStore() });
 
   return (
     <Table className="border-collapse table-fixed min-w-full">
@@ -51,7 +73,7 @@ const DataTable = <T extends BaseDataItem>({
               //   disabled={tableState === "NEW"}
             />
           </TableHead>
-          {table.getHeaders().map((header) => (
+          {table.getPublicHeaders().map((header) => (
             <TableHead
               scope="col"
               key={header.id}
@@ -64,25 +86,12 @@ const DataTable = <T extends BaseDataItem>({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {table.getRows().map((row) => (
-          <TableRow key={row.id}>
-            <TableCell>
-              <Checkbox
-                className="block"
-                //   onClick={(event) => selectRow(rowIndex, event.shiftKey)}
-                //   checked={
-                //     rows.filter((row, index) => index === rowIndex && row.isSelected)
-                //       .length > 0
-                //   }
-                //   disabled={tableState === "NEW"}
-              />
-            </TableCell>
-            {table.getHeaders().map((column) => (
-              <TableCell key={`${row.id}-${column.header}`}>
-                {table.getCellReadValue(row, column.id)}
-              </TableCell>
-            ))}
-          </TableRow>
+        {rowAtom.map((rowAtom) => (
+          <DataTableRow
+            rowAtom={rowAtom as PrimitiveAtom<RowDef<T>>}
+            key={rowAtom.toString()}
+            columns={table.getPublicHeaders()}
+          />
         ))}
       </TableBody>
     </Table>

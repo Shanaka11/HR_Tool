@@ -1,27 +1,31 @@
 import { useMemo } from "react";
-import { ColumnDef } from "./types";
+import { ColumnDef, RowDef } from "./types";
+import { atom, useAtom, useAtomValue } from "jotai";
+import { splitAtom } from "jotai/utils";
+import { BaseDataItem } from "./DataTable";
 
-type TableOptions<T> = {
+type TableOptions<T extends BaseDataItem> = {
   data: T[];
   columns: ColumnDef<T>[];
 };
 
-export const useTable = <T>({ columns, data }: TableOptions<T>) => {
-  const rows = useMemo(() => {
+export const useTable = <T extends BaseDataItem>({
+  columns,
+  data,
+}: TableOptions<T>) => {
+  const rows: RowDef<T>[] = useMemo(() => {
     // For now we will just get data, later we can add states such as marked for, and selected
-    return data;
+    return data.map((dataItem) => {
+      return {
+        selected: false,
+        markedFor: "READ",
+        dataItem: dataItem,
+      };
+    });
   }, [data]);
 
-  const getHeaders = () => {
-    return columns
-      .filter((column) => !column.hidden)
-      .map((column) => {
-        return {
-          id: column.id,
-          header: column.header,
-          size: column.size,
-        };
-      });
+  const getPublicHeaders = () => {
+    return columns.filter((column) => !column.hidden);
   };
 
   const getRows = () => {
@@ -35,7 +39,7 @@ export const useTable = <T>({ columns, data }: TableOptions<T>) => {
   };
 
   return {
-    getHeaders,
+    getPublicHeaders,
     getRows,
     getCellReadValue,
   };
