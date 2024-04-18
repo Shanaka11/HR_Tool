@@ -13,7 +13,7 @@ import { useTable } from "./useTable";
 import { Checkbox } from "@/components/ui/checkbox";
 import DataTableRow from "./DataTableRow";
 import { PrimitiveAtom, Provider, atom, useAtom, useStore } from "jotai";
-import { rowAtoms, rowsAtom } from "./DataTableStore";
+import { loadRowsAtom, rowAtoms, rowsAtom } from "./DataTableStore";
 
 export type BaseDataItem = {
   id: string;
@@ -30,18 +30,12 @@ const DataTable = <T extends BaseDataItem>({
 }: DataTableProps<T>) => {
   const store = useStore();
   const loaded = useRef(false);
+  const [, loadRows] = useAtom(loadRowsAtom, {
+    store: store,
+  });
 
   if (!loaded.current) {
-    store.set(
-      rowsAtom,
-      data.map((dataItem) => {
-        return {
-          selected: false,
-          markedFor: "READ" as const,
-          dataItem: dataItem,
-        };
-      })
-    );
+    loadRows(data);
     loaded.current = true;
   }
   const table = useTable({
