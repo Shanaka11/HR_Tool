@@ -5,7 +5,9 @@
 - [x] Finish the Title bar (Add signout feature) (Add home icon and user icon with the dropdown menu) (Done)
 - [x] Remove zustand and add jotai (Done)
 - [x] Rework jotai providers to work with server rendering
-- [ ] Create the table UI
+- [ ] Create the table UI (Skeleton)
+- [ ] Create final table UI
+- [ ] Create cells for, text, number, date, enum, lov input types
 - [ ] Create the table UI for time reporting
 - [ ] Configure the backend - (Drizzle, Database)
 - [ ] Add pages to User, Company, Employee, Project, Activity, Customer entities
