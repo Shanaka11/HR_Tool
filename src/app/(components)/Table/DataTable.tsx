@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/table";
 import React, { useRef } from "react";
 import { ColumnDef, ColumnSize, RowDef } from "./types";
-import { useTable } from "./useTable";
 import { Checkbox } from "@/components/ui/checkbox";
 import DataTableRow from "./DataTableRow";
 import {
