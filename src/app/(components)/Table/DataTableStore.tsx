@@ -99,6 +99,7 @@ const handleRowSelect = (
 };
 
 const handleMarkDelete = (get: Getter, set: Setter) => {
+  set(tableStateAtom, "DELETE");
   set(rowsAtom, (prev) => {
     return prev.map((row) => {
       if (row.selected) {
@@ -112,7 +113,21 @@ const handleMarkDelete = (get: Getter, set: Setter) => {
   });
 };
 
+const handleAllowMarkDelete = (get: Getter) => {
+  const tableState = get(tableStateAtom);
+
+  if (tableState !== "READ") return true;
+
+  const rows = get(rowsAtom);
+  for (let i = 0; i < rows.length; i++) {
+    console.log(rows[i].selected);
+    if (rows[i].selected) return false;
+  }
+  return true;
+};
+
 const handleMarkCancel = (get: Getter, set: Setter) => {
+  set(tableStateAtom, "READ");
   set(rowsAtom, (prev) => {
     return prev.map((row) => {
       return {
@@ -124,6 +139,9 @@ const handleMarkCancel = (get: Getter, set: Setter) => {
   });
 };
 
+const handleAllowMarkCancel = (get: Getter) => {
+  return get(tableStateAtom) === "READ";
+};
 // Jotai
 
 export const rowsAtom = atom<RowDef<unknown>[]>([]);
@@ -144,12 +162,20 @@ export const allRowsSelectedAtom = atom(allRowsSelected);
 // Shift Click
 export const selectRowAtom = atom(() => "", handleRowSelect);
 
+// Table state
+export const tableStateAtom = atom<"CREATE" | "READ" | "UPDATE" | "DELETE">(
+  "READ"
+);
 // Allow Mark Delete
+export const allowMarkDeleteAtom = atom(handleAllowMarkDelete);
 // Mark Delete
 export const markDeleteRowAtom = atom(() => "", handleMarkDelete);
 
+// Allow Cancle Mark
+export const allowCancelMarkAtom = atom(handleAllowMarkCancel);
 // Cancle Mark
 export const cancleRowMarkAtom = atom(() => "", handleMarkCancel);
+
 // Column Definition
 export const colsAtom = atom<ColumnDef<any>[]>([]);
 
