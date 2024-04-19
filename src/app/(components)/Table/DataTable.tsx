@@ -21,6 +21,8 @@ import {
 } from "jotai";
 import {
   allRowsSelectedAtom,
+  colsAtom,
+  loadColsAtom,
   loadRowsAtom,
   rowAtoms,
   selectAllAtom,
@@ -41,18 +43,18 @@ const DataTable = <T extends BaseDataItem>({
 }: DataTableProps<T>) => {
   const store = useStore();
   const loaded = useRef(false);
-  const [, loadRows] = useAtom(loadRowsAtom, {
+  const loadRows = useSetAtom(loadRowsAtom, {
     store: store,
   });
 
+  const loadCols = useSetAtom(loadColsAtom);
+  const columns = useAtomValue(colsAtom);
+
   if (!loaded.current) {
     loadRows(data);
+    loadCols(columnDefinition);
     loaded.current = true;
   }
-  const table = useTable({
-    data,
-    columns: columnDefinition,
-  });
 
   const allSelected = useAtomValue(allRowsSelectedAtom, {
     store: store,
@@ -80,7 +82,7 @@ const DataTable = <T extends BaseDataItem>({
               //   disabled={tableState === "NEW"}
             />
           </TableHead>
-          {table.getPublicHeaders().map((header) => (
+          {columns.map((header) => (
             <TableHead
               scope="col"
               key={header.id}
@@ -89,6 +91,7 @@ const DataTable = <T extends BaseDataItem>({
               {header.header}
             </TableHead>
           ))}
+          {/* Dummy col to fill the remaining widht */}
           <TableHead className="w-auto"></TableHead>
         </TableRow>
       </TableHeader>
@@ -97,7 +100,6 @@ const DataTable = <T extends BaseDataItem>({
           <DataTableRow
             rowAtom={rowAtom as PrimitiveAtom<RowDef<T>>}
             key={rowAtom.toString()}
-            columns={table.getPublicHeaders()}
             index={index}
           />
         ))}

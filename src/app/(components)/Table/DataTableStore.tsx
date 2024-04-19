@@ -1,7 +1,7 @@
 "use client";
 import { Getter, PrimitiveAtom, Setter, atom } from "jotai";
 import { splitAtom } from "jotai/utils";
-import { RowDef } from "./types";
+import { ColumnDef, RowDef } from "./types";
 
 const loadRows = (set: Setter, data: unknown[]) => {
   set(
@@ -13,6 +13,13 @@ const loadRows = (set: Setter, data: unknown[]) => {
         dataItem: dataItem,
       };
     })
+  );
+};
+
+const setColumnDefinitions = (set: Setter, columns: ColumnDef<any>[]) => {
+  set(
+    colsAtom,
+    columns.filter((column) => !column.hidden)
   );
 };
 
@@ -112,3 +119,9 @@ export const allRowsSelectedAtom = atom(allRowsSelected);
 export const selectRowAtom = atom(() => "", handleRowSelect);
 
 // Column Definition
+export const colsAtom = atom<ColumnDef<any>[]>([]);
+
+export const loadColsAtom = atom(
+  () => "",
+  (get, set, columns: ColumnDef<any>[]) => setColumnDefinitions(set, columns)
+);

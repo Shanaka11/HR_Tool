@@ -3,19 +3,17 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { PrimitiveAtom, useAtomValue, useSetAtom, useStore } from "jotai";
 import React from "react";
 import { BaseDataItem } from "./DataTable";
-import { ColumnDef, RowDef } from "./types";
+import { RowDef } from "./types";
 import { Checkbox } from "@/components/ui/checkbox";
-import { selectRowAtom } from "./DataTableStore";
+import { colsAtom, selectRowAtom } from "./DataTableStore";
 
 type DataTableRowProps<T extends BaseDataItem> = {
   rowAtom: PrimitiveAtom<RowDef<T>>;
-  columns: ColumnDef<T>[];
   index: number;
 };
 
 const DataTableRow = <T extends BaseDataItem>({
   rowAtom,
-  columns,
   index,
 }: DataTableRowProps<T>) => {
   const store = useStore();
@@ -25,6 +23,8 @@ const DataTableRow = <T extends BaseDataItem>({
   const handleRowSelect = useSetAtom(selectRowAtom, {
     store,
   });
+
+  const columns = useAtomValue(colsAtom);
 
   const handleRowSelectOnClick = (holdShift: boolean) => {
     handleRowSelect(rowAtom, holdShift, index);
