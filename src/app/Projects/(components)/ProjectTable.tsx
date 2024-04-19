@@ -31,9 +31,17 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
     },
   ];
 
+  const handleDelete = (dataToBeDeleted: Project[]) => {
+    console.log(dataToBeDeleted);
+  };
+
   return (
     <DataTableProvider>
-      <DataTable data={data} columnDefinition={columns} />
+      <DataTable
+        data={data}
+        columnDefinition={columns}
+        handleDelete={handleDelete}
+      />
     </DataTableProvider>
   );
 };

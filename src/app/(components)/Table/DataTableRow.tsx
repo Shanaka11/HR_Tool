@@ -31,7 +31,10 @@ const DataTableRow = <T extends BaseDataItem>({
   };
 
   return (
-    <TableRow key={row.dataItem.id}>
+    <TableRow
+      key={row.dataItem.id}
+      className={row.markedFor === "DELETE" ? "line-through" : ""}
+    >
       <TableCell>
         <Checkbox
           className="block"
@@ -41,7 +44,7 @@ const DataTableRow = <T extends BaseDataItem>({
           //     rows.filter((row, index) => index === rowIndex && row.isSelected)
           //       .length > 0
           //   }
-          //   disabled={tableState === "NEW"}
+          disabled={row.markedFor === "DELETE"}
         />
       </TableCell>
       {columns.map((column) => (

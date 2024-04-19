@@ -98,6 +98,32 @@ const handleRowSelect = (
   });
 };
 
+const handleMarkDelete = (get: Getter, set: Setter) => {
+  set(rowsAtom, (prev) => {
+    return prev.map((row) => {
+      if (row.selected) {
+        return {
+          ...row,
+          markedFor: "DELETE",
+        };
+      }
+      return row;
+    });
+  });
+};
+
+const handleMarkCancel = (get: Getter, set: Setter) => {
+  set(rowsAtom, (prev) => {
+    return prev.map((row) => {
+      return {
+        ...row,
+        selected: false,
+        markedFor: "READ",
+      };
+    });
+  });
+};
+
 // Jotai
 
 export const rowsAtom = atom<RowDef<unknown>[]>([]);
@@ -118,6 +144,12 @@ export const allRowsSelectedAtom = atom(allRowsSelected);
 // Shift Click
 export const selectRowAtom = atom(() => "", handleRowSelect);
 
+// Allow Mark Delete
+// Mark Delete
+export const markDeleteRowAtom = atom(() => "", handleMarkDelete);
+
+// Cancle Mark
+export const cancleRowMarkAtom = atom(() => "", handleMarkCancel);
 // Column Definition
 export const colsAtom = atom<ColumnDef<any>[]>([]);
 

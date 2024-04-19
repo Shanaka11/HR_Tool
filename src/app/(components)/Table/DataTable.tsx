@@ -2,7 +2,6 @@
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -24,8 +23,10 @@ import {
   loadColsAtom,
   loadRowsAtom,
   rowAtoms,
+  rowsAtom,
   selectAllAtom,
 } from "./DataTableStore";
+import DataTableToolaBar from "./DataTableToolaBar";
 
 export type BaseDataItem = {
   id: string;
@@ -34,11 +35,13 @@ export type BaseDataItem = {
 type DataTableProps<T extends BaseDataItem> = {
   data: T[];
   columnDefinition: ColumnDef<T>[];
+  handleDelete: (dataToBeDeleted: T[]) => void;
 };
 
 const DataTable = <T extends BaseDataItem>({
   data,
   columnDefinition,
+  handleDelete,
 }: DataTableProps<T>) => {
   const store = useStore();
   const loaded = useRef(false);
@@ -50,8 +53,8 @@ const DataTable = <T extends BaseDataItem>({
   const columns = useAtomValue(colsAtom);
 
   if (!loaded.current) {
-    loadRows(data);
     loadCols(columnDefinition);
+    loadRows(data);
     loaded.current = true;
   }
 
@@ -60,6 +63,7 @@ const DataTable = <T extends BaseDataItem>({
   });
 
   const [rowAtom] = useAtom(rowAtoms, { store: useStore() });
+  const rows = useAtomValue(rowsAtom);
   const handleSelectAllClick = useSetAtom(selectAllAtom, { store: store });
 
   const getColWidth = (size?: ColumnSize) => {
@@ -69,41 +73,53 @@ const DataTable = <T extends BaseDataItem>({
     return "w-auto min-w-40";
   };
 
+  const handleSaveOnClick = () => {
+    // When removing
+    const remData = rows
+      .filter((row) => row.markedFor === "DELETE")
+      .map((row) => row.dataItem) as T[];
+    handleDelete(remData);
+  };
+
   return (
-    <Table className="border-collapse table-fixed min-w-full">
-      <TableHeader>
-        <TableRow>
-          <TableHead scope="row" className="w-8">
-            <Checkbox
-              className="block"
-              onClick={handleSelectAllClick}
-              checked={allSelected}
-              //   disabled={tableState === "NEW"}
-            />
-          </TableHead>
-          {columns.map((header) => (
-            <TableHead
-              scope="col"
-              key={header.id}
-              className={`${getColWidth(header.size)}`}
-            >
-              {header.header}
+    <>
+      {/* Table Toolbar */}
+      <DataTableToolaBar handleSave={handleSaveOnClick} />
+      <Table className="border-collapse table-fixed min-w-full">
+        <TableHeader>
+          <TableRow>
+            <TableHead scope="row" className="w-8">
+              <Checkbox
+                className="block"
+                onClick={handleSelectAllClick}
+                checked={allSelected}
+                //   disabled={tableState === "NEW"}
+              />
             </TableHead>
+            {columns.map((header) => (
+              <TableHead
+                scope="col"
+                key={header.id}
+                className={`${getColWidth(header.size)}`}
+              >
+                {header.header}
+              </TableHead>
+            ))}
+            {/* Dummy col to fill the remaining widht */}
+            <TableHead className="w-auto"></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {rowAtom.map((rowAtom, index) => (
+            <DataTableRow
+              rowAtom={rowAtom as PrimitiveAtom<RowDef<T>>}
+              key={rowAtom.toString()}
+              index={index}
+            />
           ))}
-          {/* Dummy col to fill the remaining widht */}
-          <TableHead className="w-auto"></TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {rowAtom.map((rowAtom, index) => (
-          <DataTableRow
-            rowAtom={rowAtom as PrimitiveAtom<RowDef<T>>}
-            key={rowAtom.toString()}
-            index={index}
-          />
-        ))}
-      </TableBody>
-    </Table>
+        </TableBody>
+      </Table>
+    </>
   );
 };
 
