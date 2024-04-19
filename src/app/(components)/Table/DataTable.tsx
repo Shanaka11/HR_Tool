@@ -22,6 +22,8 @@ import {
 	colsAtom,
 	loadColsAtom,
 	loadRowsAtom,
+	newRowAtoms,
+	newRowsAtom,
 	rowAtoms,
 	rowsAtom,
 	selectAllAtom,
@@ -38,6 +40,7 @@ type DataTableProps<T extends BaseDataItem> = {
 	columnDefinition: ColumnDef<T>[];
 	handleDelete: (dataToBeDeleted: T[]) => void;
 	handleUpdate: (dataToBeUpdated: T[]) => void;
+	handleCreate: (dataToBeCreated: T[]) => void;
 };
 
 const DataTable = <T extends BaseDataItem>({
@@ -45,6 +48,7 @@ const DataTable = <T extends BaseDataItem>({
 	columnDefinition,
 	handleDelete,
 	handleUpdate,
+	handleCreate,
 }: DataTableProps<T>) => {
 	const store = useStore();
 	const loaded = useRef(false);
@@ -65,8 +69,10 @@ const DataTable = <T extends BaseDataItem>({
 		store: store,
 	});
 
-	const [rowAtom] = useAtom(rowAtoms, { store: useStore() });
-	const rows = useAtomValue(rowsAtom);
+	const [rowAtom] = useAtom(rowAtoms, { store });
+	const newRows = useAtomValue(newRowsAtom, { store });
+	const rows = useAtomValue(rowsAtom, { store });
+	const [newRowAtom] = useAtom(newRowAtoms, { store });
 	const handleSelectAllClick = useSetAtom(selectAllAtom, { store: store });
 	const tableState = useAtomValue(tableStateAtom, { store });
 
@@ -78,6 +84,10 @@ const DataTable = <T extends BaseDataItem>({
 	};
 
 	const handleSaveOnClick = () => {
+		if (tableState === 'CREATE') {
+			const newData = newRows.map((row) => row.dataItem) as T[];
+			handleCreate(newData);
+		}
 		if (tableState === 'DELETE') {
 			// When removing
 			const remData = rows
@@ -124,13 +134,24 @@ const DataTable = <T extends BaseDataItem>({
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{rowAtom.map((rowAtom, index) => (
-						<DataTableRow
-							rowAtom={rowAtom as PrimitiveAtom<RowDef<T>>}
-							key={rowAtom.toString()}
-							index={index}
-						/>
-					))}
+					<>
+						{newRowAtom.map((rowAtom, index) => (
+							<DataTableRow
+								rowAtom={rowAtom as PrimitiveAtom<RowDef<T>>}
+								key={rowAtom.toString()}
+								index={index}
+							/>
+						))}
+					</>
+					<>
+						{rowAtom.map((rowAtom, index) => (
+							<DataTableRow
+								rowAtom={rowAtom as PrimitiveAtom<RowDef<T>>}
+								key={rowAtom.toString()}
+								index={index}
+							/>
+						))}
+					</>
 				</TableBody>
 			</Table>
 		</>

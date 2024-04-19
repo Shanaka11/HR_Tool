@@ -126,7 +126,12 @@ const handleAllowMarkDelete = (get: Getter) => {
 
 const handleMarkCancel = (get: Getter, set: Setter) => {
 	const tableState = get(tableStateAtom);
-	if (tableState === 'UPDATE' || tableState === 'CREATE') {
+	if (tableState === 'CREATE') {
+		set(newRowsAtom, []);
+		set(tableStateAtom, 'READ');
+		return;
+	}
+	if (tableState === 'UPDATE') {
 		const originalRows = get(originalRowsAtom);
 		set(rowsAtom, originalRows);
 		set(tableStateAtom, 'READ');
@@ -162,8 +167,27 @@ const handleMarkUpdate = (get: Getter, set: Setter) => {
 		});
 	});
 };
+
+const handleMarkCreate = (get: Getter, set: Setter) => {
+	const newRowDataItem: any = {};
+	const columns = get(colsAtom);
+	columns.forEach((column) => {
+		newRowDataItem[column.name] = column.defaultValue;
+	});
+	set(newRowsAtom, (prev) => [
+		{
+			markedFor: 'INSERT',
+			selected: false,
+			dataItem: newRowDataItem,
+		},
+		...prev,
+	]);
+	set(tableStateAtom, 'CREATE');
+};
 // Jotai
 
+export const newRowsAtom = atom<RowDef<unknown>[]>([]);
+export const newRowAtoms = splitAtom(newRowsAtom);
 export const rowsAtom = atom<RowDef<unknown>[]>([]);
 export const originalRowsAtom = atom<RowDef<unknown>[]>([]);
 export const rowAtoms = splitAtom(rowsAtom);
@@ -199,6 +223,9 @@ export const cancleRowMarkAtom = atom(() => '', handleMarkCancel);
 
 // Mark Update
 export const markUpdateRowAtom = atom(() => '', handleMarkUpdate);
+
+// Mark Create
+export const markCreateRowAtom = atom(() => '', handleMarkCreate);
 // Column Definition
 export const colsAtom = atom<ColumnDef<any>[]>([]);
 

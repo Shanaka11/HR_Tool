@@ -51,7 +51,7 @@ const DataTableRow = <T extends BaseDataItem>({
 		});
 	};
 
-	if (row.markedFor === 'UPDATE') {
+	if (row.markedFor === 'UPDATE' || row.markedFor === 'INSERT') {
 		return (
 			<TableRow>
 				<TableCell>

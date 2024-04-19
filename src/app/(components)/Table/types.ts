@@ -3,6 +3,7 @@ export type ColumnDef<T> = {
 	name: string; // Column identifier
 	header: string; // Column label
 	getValue: (row: T) => (string & {}) | keyof T;
+	defaultValue?: keyof T;
 	size?: ColumnSize;
 	setValue?: (row: T, value: keyof T) => T;
 	editable?: boolean;

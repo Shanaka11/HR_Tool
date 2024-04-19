@@ -54,6 +54,10 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
 		console.log(dataToBeUpdated);
 	};
 
+	const handleCreate = (dataToBeCreated: Project[]) => {
+		console.log(dataToBeCreated);
+	};
+
 	return (
 		<DataTableProvider>
 			<DataTable
@@ -61,6 +65,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
 				columnDefinition={columns}
 				handleDelete={handleDelete}
 				handleUpdate={handleUpdate}
+				handleCreate={handleCreate}
 			/>
 		</DataTableProvider>
 	);
