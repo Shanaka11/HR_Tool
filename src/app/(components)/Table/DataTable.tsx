@@ -12,8 +12,19 @@ import { ColumnDef, ColumnSize, RowDef } from "./types";
 import { useTable } from "./useTable";
 import { Checkbox } from "@/components/ui/checkbox";
 import DataTableRow from "./DataTableRow";
-import { PrimitiveAtom, Provider, atom, useAtom, useStore } from "jotai";
-import { loadRowsAtom, rowAtoms, rowsAtom } from "./DataTableStore";
+import {
+  PrimitiveAtom,
+  useAtom,
+  useAtomValue,
+  useSetAtom,
+  useStore,
+} from "jotai";
+import {
+  allRowsSelectedAtom,
+  loadRowsAtom,
+  rowAtoms,
+  selectAllAtom,
+} from "./DataTableStore";
 
 export type BaseDataItem = {
   id: string;
@@ -43,14 +54,19 @@ const DataTable = <T extends BaseDataItem>({
     columns: columnDefinition,
   });
 
+  const allSelected = useAtomValue(allRowsSelectedAtom, {
+    store: store,
+  });
+
+  const [rowAtom] = useAtom(rowAtoms, { store: useStore() });
+  const handleSelectAllClick = useSetAtom(selectAllAtom, { store: store });
+
   const getColWidth = (size?: ColumnSize) => {
     if (size === "LARGE") return "w-64";
     if (size === "MEDIUM") return "w-40";
     if (size === "SMALL") return "w-20";
     return "w-auto min-w-40";
   };
-
-  const [rowAtom] = useAtom(rowAtoms, { store: useStore() });
 
   return (
     <Table className="border-collapse table-fixed min-w-full">
@@ -59,11 +75,8 @@ const DataTable = <T extends BaseDataItem>({
           <TableHead scope="row" className="w-8">
             <Checkbox
               className="block"
-              //   onClick={(event) => selectRow(rowIndex, event.shiftKey)}
-              //   checked={
-              //     rows.filter((row, index) => index === rowIndex && row.isSelected)
-              //       .length > 0
-              //   }
+              onClick={handleSelectAllClick}
+              checked={allSelected}
               //   disabled={tableState === "NEW"}
             />
           </TableHead>
@@ -80,11 +93,12 @@ const DataTable = <T extends BaseDataItem>({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {rowAtom.map((rowAtom) => (
+        {rowAtom.map((rowAtom, index) => (
           <DataTableRow
             rowAtom={rowAtom as PrimitiveAtom<RowDef<T>>}
             key={rowAtom.toString()}
             columns={table.getPublicHeaders()}
+            index={index}
           />
         ))}
       </TableBody>

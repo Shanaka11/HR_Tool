@@ -1,29 +1,33 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 
-import { PrimitiveAtom, useAtom } from "jotai";
+import { PrimitiveAtom, useAtomValue, useSetAtom, useStore } from "jotai";
 import React from "react";
 import { BaseDataItem } from "./DataTable";
 import { ColumnDef, RowDef } from "./types";
 import { Checkbox } from "@/components/ui/checkbox";
+import { selectRowAtom } from "./DataTableStore";
 
 type DataTableRowProps<T extends BaseDataItem> = {
   rowAtom: PrimitiveAtom<RowDef<T>>;
   columns: ColumnDef<T>[];
+  index: number;
 };
 
 const DataTableRow = <T extends BaseDataItem>({
   rowAtom,
   columns,
+  index,
 }: DataTableRowProps<T>) => {
-  const [row, setRow] = useAtom(rowAtom);
+  const store = useStore();
+  const row = useAtomValue(rowAtom, {
+    store,
+  });
+  const handleRowSelect = useSetAtom(selectRowAtom, {
+    store,
+  });
 
-  const handleRowSelectOnClick = () => {
-    setRow((prevRow) => {
-      return {
-        ...prevRow,
-        selected: !prevRow.selected,
-      };
-    });
+  const handleRowSelectOnClick = (holdShift: boolean) => {
+    handleRowSelect(rowAtom, holdShift, index);
   };
 
   return (
@@ -31,8 +35,7 @@ const DataTableRow = <T extends BaseDataItem>({
       <TableCell>
         <Checkbox
           className="block"
-          //   onClick={(event) => selectRow(rowIndex, event.shiftKey)}
-          onClick={handleRowSelectOnClick}
+          onClick={(event) => handleRowSelectOnClick(event.shiftKey)}
           checked={row.selected}
           //   checked={
           //     rows.filter((row, index) => index === rowIndex && row.isSelected)
