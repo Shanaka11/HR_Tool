@@ -6,24 +6,48 @@ import {
 	allowCancelMarkAtom,
 	allowMarkDeleteAtom,
 	cancleRowMarkAtom,
+	changedDataAtom,
 	markCreateRowAtom,
 	markDeleteRowAtom,
 	markUpdateRowAtom,
 } from './DataTableStore';
-import { BaseDataItem } from './DataTable';
 
-type DataTableToolaBarProps = {
-	handleSave: () => void;
+type DataTableToolaBarProps<T> = {
+	handleDelete: (dataToBeDeleted: T[]) => void;
+	handleUpdate: (dataToBeUpdated: T[]) => void;
+	handleCreate: (dataToBeCreated: T[]) => void;
 };
 
-const DataTableToolaBar = ({ handleSave }: DataTableToolaBarProps) => {
+const DataTableToolaBar = <T,>({
+	handleCreate,
+	handleDelete,
+	handleUpdate,
+}: DataTableToolaBarProps<T>) => {
 	const store = useStore();
+	const changedData = useAtomValue(changedDataAtom, { store });
 	const handleMarkDelete = useSetAtom(markDeleteRowAtom, { store });
 	const handleCancelMark = useSetAtom(cancleRowMarkAtom, { store });
 	const handleMarkUpdate = useSetAtom(markUpdateRowAtom, { store });
 	const handleMarkCreate = useSetAtom(markCreateRowAtom, { store });
 	const allowDelete = useAtomValue(allowMarkDeleteAtom, { store });
 	const allowCancel = useAtomValue(allowCancelMarkAtom, { store });
+
+	const handleSave = () => {
+		if (changedData.tableState === 'CREATE') {
+			handleCreate(changedData.rows as T[]);
+			return;
+		}
+
+		if (changedData.tableState === 'DELETE') {
+			handleDelete(changedData.rows as T[]);
+			return;
+		}
+
+		if (changedData.tableState === 'UPDATE') {
+			handleUpdate(changedData.rows as T[]);
+			return;
+		}
+	};
 
 	return (
 		<div className='flex gap-1'>

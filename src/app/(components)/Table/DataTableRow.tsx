@@ -41,6 +41,7 @@ const DataTableRow = <T extends BaseDataItem>({
 		value: string,
 		updateFunction?: (row: any, value: string | number | symbol) => any
 	) => {
+		// Do field validation here as well, use zod schema validation and define the schema in the column def, if there is a validation error, show it in the relevent cell
 		if (updateFunction === undefined)
 			throw new Error('setValue function undefined in the column defintion');
 		setRow((prev) => {

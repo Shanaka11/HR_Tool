@@ -5,9 +5,17 @@
 - [x] Finish the Title bar (Add signout feature) (Add home icon and user icon with the dropdown menu) (Done)
 - [x] Remove zustand and add jotai (Done)
 - [x] Rework jotai providers to work with server rendering
-- [ ] Create the table UI (Skeleton)
-- [ ] Create final table UI
+- [x] Create the table UI (Skeleton)
+- [x] Refactor the atoms to minimize rerenders
+- [ ] Add validation when creating / updating data
+- [ ] Handle success / error states when duing the actual CRUD operations (revert data as needed)
 - [ ] Create cells for, text, number, date, enum, lov input types
+  - [ ] Text
+  - [ ] Number
+  - [ ] Lov
+  - [ ] Enum
+  - [ ] Date
+- [ ] Create final table UI
 - [ ] Create the table UI for time reporting
 - [ ] Configure the backend - (Drizzle, Database)
 - [ ] Add pages to User, Company, Employee, Project, Activity, Customer entities

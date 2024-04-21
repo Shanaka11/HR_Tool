@@ -3,6 +3,15 @@ import { Getter, PrimitiveAtom, Setter, atom } from 'jotai';
 import { splitAtom } from 'jotai/utils';
 import { ColumnDef, RowDef } from './types';
 
+// Jotai
+// Data Atoms
+const newRowsAtom = atom<RowDef<unknown>[]>([]);
+export const newRowAtoms = splitAtom(newRowsAtom);
+const rowsAtom = atom<RowDef<unknown>[]>([]);
+export const rowAtoms = splitAtom(rowsAtom);
+const originalRowsAtom = atom<RowDef<unknown>[]>([]);
+const selectedRowIndexAtom = atom<number[]>([-1]);
+
 const loadRows = (set: Setter, data: unknown[]) => {
 	const rowData = data.map((dataItem) => {
 		return {
@@ -98,18 +107,17 @@ const handleRowSelect = (
 };
 
 const handleMarkDelete = (get: Getter, set: Setter) => {
-	set(tableStateAtom, 'DELETE');
-	set(rowsAtom, (prev) => {
-		return prev.map((row) => {
-			if (row.selected) {
-				return {
-					...row,
-					markedFor: 'DELETE',
-				};
-			}
-			return row;
-		});
+	const rowAtomsAtom = get(rowAtoms);
+	rowAtomsAtom.forEach((rowAtom) => {
+		const row = get(rowAtom);
+		if (row.selected) {
+			set(rowAtom, {
+				...row,
+				markedFor: 'DELETE',
+			});
+		}
 	});
+	set(tableStateAtom, 'DELETE');
 };
 
 const handleAllowMarkDelete = (get: Getter) => {
@@ -154,18 +162,17 @@ const handleAllowMarkCancel = (get: Getter) => {
 };
 
 const handleMarkUpdate = (get: Getter, set: Setter) => {
-	set(tableStateAtom, 'UPDATE');
-	set(rowsAtom, (prev) => {
-		return prev.map((row) => {
-			if (row.selected) {
-				return {
-					...row,
-					markedFor: 'UPDATE',
-				};
-			}
-			return row;
-		});
+	const rowAtomsAtom = get(rowAtoms);
+	rowAtomsAtom.forEach((rowAtom) => {
+		const row = get(rowAtom);
+		if (row.selected) {
+			set(rowAtom, {
+				...row,
+				markedFor: 'UPDATE',
+			});
+		}
 	});
+	set(tableStateAtom, 'UPDATE');
 };
 
 const handleMarkCreate = (get: Getter, set: Setter) => {
@@ -184,28 +191,48 @@ const handleMarkCreate = (get: Getter, set: Setter) => {
 	]);
 	set(tableStateAtom, 'CREATE');
 };
-// Jotai
 
-export const newRowsAtom = atom<RowDef<unknown>[]>([]);
-export const newRowAtoms = splitAtom(newRowsAtom);
-export const rowsAtom = atom<RowDef<unknown>[]>([]);
-export const originalRowsAtom = atom<RowDef<unknown>[]>([]);
-export const rowAtoms = splitAtom(rowsAtom);
-export const selectedRowIndexAtom = atom<number[]>([-1]);
-
-// Load data to table
-export const loadRowsAtom = atom(
-	() => '',
-	(get, set, data: unknown[]) => {
-		loadRows(set, data);
+const getChangedData = (get: Getter) => {
+	const tableState = get(tableStateAtom);
+	if (tableState === 'CREATE') {
+		const rows = get(newRowsAtom);
+		return {
+			rows: rows
+				.filter((row) => row.markedFor === 'INSERT')
+				.map((row) => row.dataItem),
+			tableState,
+		};
 	}
-);
+
+	const rows = get(rowsAtom);
+	if (tableState === 'UPDATE') {
+		return {
+			rows: rows
+				.filter((row) => row.markedFor === 'UPDATE')
+				.map((row) => row.dataItem),
+			tableState,
+		};
+	}
+
+	return {
+		rows: rows
+			.filter((row) => row.markedFor === 'DELETE')
+			.map((row) => row.dataItem),
+		tableState,
+	};
+};
+
+// Action Atoms
+// Load data to table
+export const loadRowsAtom = atom(null, (get, set, data: unknown[]) => {
+	loadRows(set, data);
+});
 // Click Select All
-export const selectAllAtom = atom(() => '', handleSelectAll);
+export const selectAllAtom = atom(null, handleSelectAll);
 // Select All
 export const allRowsSelectedAtom = atom(allRowsSelected);
 // Shift Click
-export const selectRowAtom = atom(() => '', handleRowSelect);
+export const selectRowAtom = atom(null, handleRowSelect);
 
 // Table state
 export const tableStateAtom = atom<'CREATE' | 'READ' | 'UPDATE' | 'DELETE'>(
@@ -214,22 +241,25 @@ export const tableStateAtom = atom<'CREATE' | 'READ' | 'UPDATE' | 'DELETE'>(
 // Allow Mark Delete / Update
 export const allowMarkDeleteAtom = atom(handleAllowMarkDelete);
 // Mark Delete
-export const markDeleteRowAtom = atom(() => '', handleMarkDelete);
+export const markDeleteRowAtom = atom(null, handleMarkDelete);
 
 // Allow Cancel Mark
 export const allowCancelMarkAtom = atom(handleAllowMarkCancel);
 // Cancle Mark
-export const cancleRowMarkAtom = atom(() => '', handleMarkCancel);
+export const cancleRowMarkAtom = atom(null, handleMarkCancel);
 
 // Mark Update
-export const markUpdateRowAtom = atom(() => '', handleMarkUpdate);
+export const markUpdateRowAtom = atom(null, handleMarkUpdate);
 
 // Mark Create
-export const markCreateRowAtom = atom(() => '', handleMarkCreate);
+export const markCreateRowAtom = atom(null, handleMarkCreate);
+
+// Save Action
+export const changedDataAtom = atom(getChangedData);
+
 // Column Definition
 export const colsAtom = atom<ColumnDef<any>[]>([]);
 
-export const loadColsAtom = atom(
-	() => '',
-	(get, set, columns: ColumnDef<any>[]) => setColumnDefinitions(set, columns)
+export const loadColsAtom = atom(null, (get, set, columns: ColumnDef<any>[]) =>
+	setColumnDefinitions(set, columns)
 );
