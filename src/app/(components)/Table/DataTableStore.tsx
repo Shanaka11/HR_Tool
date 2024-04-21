@@ -14,6 +14,7 @@ export const rowAtoms = splitAtom(rowsAtom);
 const originalRowsAtom = atom<RowDef<unknown>[]>([]);
 const selectedRowIndexAtom = atom<number[]>([-1]);
 export const isTableValidAtom = atom<boolean>(true);
+export const isTableLoadingAtom = atom<boolean>(false);
 
 const loadRows = (set: Setter, data: unknown[]) => {
   const rowData = data.map((dataItem) => {

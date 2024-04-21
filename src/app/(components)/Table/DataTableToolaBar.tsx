@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { useAtomValue, useSetAtom, useStore } from "jotai";
+import { useAtom, useAtomValue, useSetAtom, useStore } from "jotai";
 import { Pencil, Plus, Save, Trash2, X } from "lucide-react";
 import React from "react";
 
+import Spinner from "../Spinner";
 import {
   allowCancelMarkAtom,
   allowMarkDeleteAtom,
@@ -12,6 +13,7 @@ import {
   changedDataAtom,
   createRowsAtom,
   deleteRowsAtom,
+  isTableLoadingAtom,
   markCreateRowAtom,
   markDeleteRowAtom,
   markUpdateRowAtom,
@@ -41,17 +43,22 @@ const DataTableToolaBar = <T,>({
   const removeDeletedRows = useSetAtom(deleteRowsAtom, { store });
   const addCreatedRows = useSetAtom(createRowsAtom, { store });
   const addUpdatedRows = useSetAtom(updateRowsAtom, { store });
+  const [isTableLoading, setIsTableLoading] = useAtom(isTableLoadingAtom, {
+    store,
+  });
 
   const { toast } = useToast();
 
   const handleSave = async () => {
     if (changedData.tableState === "CREATE") {
       try {
+        setIsTableLoading(true);
         const createdData = await handleCreate(changedData.rows as T[]);
         addCreatedRows(createdData);
         toast({
           title: "Created successfully",
         });
+        setIsTableLoading(false);
         return;
       } catch (e) {
         handleCrudError(e);
@@ -60,12 +67,14 @@ const DataTableToolaBar = <T,>({
 
     if (changedData.tableState === "DELETE") {
       try {
+        setIsTableLoading(true);
         await handleDelete(changedData.rows as T[]);
         // Remove deleted data
         removeDeletedRows();
         toast({
           title: "Deleted successfully",
         });
+        setIsTableLoading(false);
         return;
       } catch (e: unknown) {
         handleCrudError(e);
@@ -74,11 +83,13 @@ const DataTableToolaBar = <T,>({
 
     if (changedData.tableState === "UPDATE") {
       try {
+        setIsTableLoading(true);
         await handleUpdate(changedData.rows as T[]);
         addUpdatedRows();
         toast({
           title: "Updated successfully",
         });
+        setIsTableLoading(false);
         return;
       } catch (e: unknown) {
         handleCrudError(e);
@@ -87,6 +98,7 @@ const DataTableToolaBar = <T,>({
   };
 
   const handleCrudError = (e: unknown) => {
+    setIsTableLoading(false);
     if (e instanceof Error) {
       toast({
         variant: "destructive",
@@ -109,7 +121,7 @@ const DataTableToolaBar = <T,>({
         variant="outline"
         size="icon"
         onClick={handleMarkCreate}
-        disabled={!allowDelete}
+        disabled={!allowDelete || isTableLoading}
       >
         <Plus />
       </Button>
@@ -117,7 +129,7 @@ const DataTableToolaBar = <T,>({
         variant="outline"
         size="icon"
         onClick={handleMarkUpdate}
-        disabled={allowDelete}
+        disabled={allowDelete || isTableLoading}
       >
         <Pencil />
       </Button>
@@ -125,7 +137,7 @@ const DataTableToolaBar = <T,>({
         variant="outline"
         size="icon"
         onClick={handleMarkDelete}
-        disabled={allowDelete}
+        disabled={allowDelete || isTableLoading}
       >
         <Trash2 />
       </Button>
@@ -133,7 +145,7 @@ const DataTableToolaBar = <T,>({
         variant="outline"
         size="icon"
         onClick={handleSave}
-        disabled={allowSave}
+        disabled={allowSave || isTableLoading}
       >
         <Save />
       </Button>
@@ -141,10 +153,15 @@ const DataTableToolaBar = <T,>({
         variant="outline"
         size="icon"
         onClick={handleCancelMark}
-        disabled={allowCancel}
+        disabled={allowCancel || isTableLoading}
       >
         <X />
       </Button>
+      {isTableLoading && (
+        <div className="grid place-items-center">
+          <Spinner />
+        </div>
+      )}
     </div>
   );
 };

@@ -9,7 +9,8 @@
 - [x] Refactor the atoms to minimize rerenders
 - [x] Add validation when creating / updating data
 - [x] Block save when there are any validation errors
-- [ ] Handle success / error states when duing the actual CRUD operations (revert data as needed)
+- [x] Handle success / error states when duing the actual CRUD operations (revert data as needed)
+- [x] Handle loading state when mutation is ongoing. (text fields / Toolbar should be disabled during the mutation)
 - [ ] Create cells for, text, number, date, enum, lov input types
   - [ ] Text
   - [ ] Number

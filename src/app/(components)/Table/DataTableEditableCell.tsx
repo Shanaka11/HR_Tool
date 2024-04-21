@@ -1,8 +1,14 @@
 import { TableCell } from "@/components/ui/table";
-import { PrimitiveAtom, useAtom, useSetAtom } from "jotai";
+import {
+  PrimitiveAtom,
+  useAtom,
+  useAtomValue,
+  useSetAtom,
+  useStore,
+} from "jotai";
 import React, { useState } from "react";
 
-import { isTableValidAtom } from "./DataTableStore";
+import { isTableLoadingAtom, isTableValidAtom } from "./DataTableStore";
 import { ColumnDef, RowDef } from "./types";
 
 type DataTableEditableCellProps<T> = {
@@ -16,8 +22,11 @@ const DataTableEditableCell = <T,>({
   updateRow,
 }: DataTableEditableCellProps<T>) => {
   const [error, setError] = useState("");
-  const setIsTableValid = useSetAtom(isTableValidAtom);
-
+  const store = useStore();
+  const setIsTableValid = useSetAtom(isTableValidAtom, { store });
+  const isTableLoading = useAtomValue(isTableLoadingAtom, {
+    store,
+  });
   const handleValueUpdate = (
     value: string,
     // updateFunction?: (row: any, value: string | number | symbol) => any,
@@ -52,6 +61,7 @@ const DataTableEditableCell = <T,>({
         defaultValue={column.getValue(row.dataItem) as string}
         className="border"
         onBlur={(event) => handleValueUpdate(event.target.value)}
+        disabled={isTableLoading}
       />
       {error !== "" && <p>{error}</p>}
     </TableCell>
