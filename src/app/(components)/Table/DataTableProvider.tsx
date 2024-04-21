@@ -1,6 +1,6 @@
 "use client";
 
-import { Provider, createStore } from "jotai";
+import { createStore, Provider } from "jotai";
 import React, { useState } from "react";
 
 const DataTableProvider = ({ children }: { children: React.ReactNode }) => {

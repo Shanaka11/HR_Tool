@@ -1,13 +1,15 @@
 "use client";
+
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import React, { ReactNode } from "react";
-import SideNavigator from "./Navigation/SideNavigator";
-import { sideNavOpenAtom } from "./Navigation/NavStore";
 import { useAtom } from "jotai";
+import React, { ReactNode } from "react";
+
+import { sideNavOpenAtom } from "./Navigation/NavStore";
+import SideNavigator from "./Navigation/SideNavigator";
 
 type MainPageLayoutProps = {
   children: ReactNode;

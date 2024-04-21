@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
+import { useAtom } from "jotai";
 import { Menu, X } from "lucide-react";
 import React from "react";
-import { sideNavOpenAtom } from "./NavStore";
 
-import { useAtom } from "jotai";
+import { sideNavOpenAtom } from "./NavStore";
 
 const OpenNavMenuButton = () => {
   const [sideNavOpen, setSideNavOpen] = useAtom(sideNavOpenAtom);

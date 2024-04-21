@@ -1,5 +1,6 @@
 "use client";
-import { ReactNode, createContext, useContext } from "react";
+
+import { createContext, ReactNode, useContext } from "react";
 
 type UserContextType = {
   userName?: string | null;
@@ -31,7 +32,7 @@ export const useUserContext = () => {
   const userContext = useContext(UserContext);
   if (userContext === null)
     throw new Error(
-      "useUserContext can only be used in components that are wrapped with UserProvider component"
+      "useUserContext can only be used in components that are wrapped with UserProvider component",
     );
   return userContext;
 };

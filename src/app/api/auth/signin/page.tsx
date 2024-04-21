@@ -1,6 +1,7 @@
 "use client";
+
 import { signIn, useSession } from "next-auth/react";
-import { useSearchParams, redirect } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 
 const page = () => {

@@ -1,7 +1,8 @@
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 import { usePathname } from "next/navigation";
+import React from "react";
+
 type SideNavListProps = {
   navItems: [
     number,
@@ -9,7 +10,7 @@ type SideNavListProps = {
       label: string;
       parentNavId: number;
       link?: string;
-    }
+    },
   ][];
   handleNavOnClick: (navigatorId: number) => void;
 };

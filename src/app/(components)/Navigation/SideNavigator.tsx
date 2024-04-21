@@ -1,11 +1,13 @@
 "use client";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { complexTextSearch } from "@/lib/complexTextSearch";
 import { ChevronLeft } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
-import SideNavIist from "./SideNavIist";
+
 import SideNavFilter from "./SideNavFilter";
-import { complexTextSearch } from "@/lib/complexTextSearch";
+import SideNavIist from "./SideNavIist";
 
 // Make this a key value store (map)
 const navigator = new Map([
@@ -70,7 +72,7 @@ const SideNavigator = ({ mobile = false }) => {
   const getBreadcrumbTrail = (
     id: number,
     trail: number[] = [],
-    skip: boolean = true
+    skip: boolean = true,
   ): number[] => {
     // This is a top level nav item
     if (id === -1) return [...trail, -1];
@@ -78,7 +80,7 @@ const SideNavigator = ({ mobile = false }) => {
     const navEntry = navigator.get(id);
     if (navEntry === undefined)
       throw new Error(
-        `Navigator entry does not exist for id: ${id} check the navigator`
+        `Navigator entry does not exist for id: ${id} check the navigator`,
       );
 
     // Ignore the very first entry

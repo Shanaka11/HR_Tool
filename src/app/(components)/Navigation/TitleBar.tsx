@@ -1,7 +1,6 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
-import { HomeIcon, LogOut, Menu, Palette, Settings, X } from "lucide-react";
-import React from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,11 +13,14 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Username from "../Username";
+import { HomeIcon, LogOut, Menu, Palette, Settings, X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
-import OpenNavMenuButton from "./OpenNavMenuButton";
 import { useRouter } from "next/navigation";
+import React from "react";
+
+import Username from "../Username";
+import OpenNavMenuButton from "./OpenNavMenuButton";
 
 // TODO: try to make the title bar a server component. make buttons client components
 const TitleBar = () => {

@@ -4,7 +4,7 @@ type Timer = ReturnType<typeof setTimeout>;
 
 export const useDebounce = <T extends (...args: any[]) => ReturnType<T>>(
   func: T,
-  delay: number = 500
+  delay: number = 500,
 ) => {
   const timer = useRef<Timer>();
 
