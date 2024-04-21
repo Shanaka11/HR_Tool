@@ -4,7 +4,7 @@ import { useAtom, useAtomValue, useSetAtom, useStore } from "jotai";
 import { Pencil, Plus, Save, Trash2, X } from "lucide-react";
 import React from "react";
 
-import Spinner from "../Spinner";
+import LinearLoader from "../LinearLoader";
 import {
   allowCancelMarkAtom,
   allowMarkDeleteAtom,
@@ -116,7 +116,7 @@ const DataTableToolaBar = <T,>({
   };
 
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-1 flex-wrap">
       <Button
         variant="outline"
         size="icon"
@@ -157,11 +157,13 @@ const DataTableToolaBar = <T,>({
       >
         <X />
       </Button>
-      {isTableLoading && (
-        <div className="grid place-items-center">
-          <Spinner />
-        </div>
-      )}
+      <div className="w-full basis-full">
+        {isTableLoading ? (
+          <LinearLoader />
+        ) : (
+          <div className="h-1 w-full bg-white"></div>
+        )}
+      </div>
     </div>
   );
 };

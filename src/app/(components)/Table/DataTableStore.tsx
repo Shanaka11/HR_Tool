@@ -159,7 +159,7 @@ const handleMarkCancel = (get: Getter, set: Setter) => {
     });
   });
   set(tableStateAtom, "READ");
-  set(isTableValidAtom, false);
+  set(isTableValidAtom, true);
 };
 
 const handleAllowMarkCancel = (get: Getter) => {
