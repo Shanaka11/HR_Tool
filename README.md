@@ -8,7 +8,7 @@
 - [x] Create the table UI (Skeleton)
 - [x] Refactor the atoms to minimize rerenders
 - [x] Add validation when creating / updating data
-- [ ] Block save when there are any validation errors
+- [x] Block save when there are any validation errors
 - [ ] Handle success / error states when duing the actual CRUD operations (revert data as needed)
 - [ ] Create cells for, text, number, date, enum, lov input types
   - [ ] Text

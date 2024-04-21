@@ -13,6 +13,7 @@ const rowsAtom = atom<RowDef<unknown>[]>([]);
 export const rowAtoms = splitAtom(rowsAtom);
 const originalRowsAtom = atom<RowDef<unknown>[]>([]);
 const selectedRowIndexAtom = atom<number[]>([-1]);
+export const isTableValidAtom = atom<boolean>(true);
 
 const loadRows = (set: Setter, data: unknown[]) => {
   const rowData = data.map((dataItem) => {
@@ -157,6 +158,7 @@ const handleMarkCancel = (get: Getter, set: Setter) => {
     });
   });
   set(tableStateAtom, "READ");
+  set(isTableValidAtom, false);
 };
 
 const handleAllowMarkCancel = (get: Getter) => {
@@ -224,6 +226,17 @@ const getChangedData = (get: Getter) => {
   };
 };
 
+const handleAllowSave = (get: Getter) => {
+  const isTableValid = get(isTableValidAtom);
+  const tableState = get(tableStateAtom);
+
+  if (isTableValid) {
+    return tableState === "READ";
+  }
+
+  return true;
+};
+
 // Action Atoms
 // Load data to table
 export const loadRowsAtom = atom(null, (get, set, data: unknown[]) => {
@@ -256,6 +269,8 @@ export const markUpdateRowAtom = atom(null, handleMarkUpdate);
 // Mark Create
 export const markCreateRowAtom = atom(null, handleMarkCreate);
 
+// Allow Save
+export const allowSaveRowAtom = atom(handleAllowSave);
 // Save Action
 export const changedDataAtom = atom(getChangedData);
 

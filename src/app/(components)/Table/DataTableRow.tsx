@@ -61,16 +61,6 @@ const DataTableRow = <T extends BaseDataItem>({
             column={column}
             row={row}
           />
-          // <TableCell key={`${row.dataItem.id}-${column.header}`}>
-          //   {/* Dependint on the column type show the correct input type */}
-          //   <input
-          //     defaultValue={column.getValue(row.dataItem) as string}
-          //     className="border"
-          //     onBlur={(event) =>
-          //       handleValueUpdate(event.target.value, column.setValue)
-          //     }
-          //   />
-          // </TableCell>
         ))}
       </TableRow>
     );

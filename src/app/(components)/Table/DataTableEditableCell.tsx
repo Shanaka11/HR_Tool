@@ -1,7 +1,8 @@
 import { TableCell } from "@/components/ui/table";
-import { PrimitiveAtom, useAtom } from "jotai";
+import { PrimitiveAtom, useAtom, useSetAtom } from "jotai";
 import React, { useState } from "react";
 
+import { isTableValidAtom } from "./DataTableStore";
 import { ColumnDef, RowDef } from "./types";
 
 type DataTableEditableCellProps<T> = {
@@ -15,6 +16,8 @@ const DataTableEditableCell = <T,>({
   updateRow,
 }: DataTableEditableCellProps<T>) => {
   const [error, setError] = useState("");
+  const setIsTableValid = useSetAtom(isTableValidAtom);
+
   const handleValueUpdate = (
     value: string,
     // updateFunction?: (row: any, value: string | number | symbol) => any,
@@ -26,8 +29,10 @@ const DataTableEditableCell = <T,>({
       if (!validationResult.success) {
         if (validationResult.error.formErrors.formErrors.length > 0) {
           setError(validationResult.error.formErrors.formErrors[0]);
+          setIsTableValid(false);
           return;
         }
+        setIsTableValid(false);
         console.log(validationResult);
         throw new Error("Validation Error");
       }
@@ -36,6 +41,7 @@ const DataTableEditableCell = <T,>({
       throw new Error("setValue function undefined in the column defintion");
 
     setError("");
+    setIsTableValid(true);
     updateRow(column.setValue(row.dataItem, value as keyof T));
   };
 

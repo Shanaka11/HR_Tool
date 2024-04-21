@@ -6,6 +6,7 @@ import React from "react";
 import {
   allowCancelMarkAtom,
   allowMarkDeleteAtom,
+  allowSaveRowAtom,
   cancleRowMarkAtom,
   changedDataAtom,
   markCreateRowAtom,
@@ -32,6 +33,7 @@ const DataTableToolaBar = <T,>({
   const handleMarkCreate = useSetAtom(markCreateRowAtom, { store });
   const allowDelete = useAtomValue(allowMarkDeleteAtom, { store });
   const allowCancel = useAtomValue(allowCancelMarkAtom, { store });
+  const allowSave = useAtomValue(allowSaveRowAtom, { store });
 
   const handleSave = () => {
     if (changedData.tableState === "CREATE") {
@@ -80,7 +82,7 @@ const DataTableToolaBar = <T,>({
         variant="outline"
         size="icon"
         onClick={handleSave}
-        disabled={allowCancel}
+        disabled={allowSave}
       >
         <Save />
       </Button>
