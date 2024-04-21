@@ -7,7 +7,8 @@
 - [x] Rework jotai providers to work with server rendering
 - [x] Create the table UI (Skeleton)
 - [x] Refactor the atoms to minimize rerenders
-- [ ] Add validation when creating / updating data
+- [x] Add validation when creating / updating data
+- [ ] Block save when there are any validation errors
 - [ ] Handle success / error states when duing the actual CRUD operations (revert data as needed)
 - [ ] Create cells for, text, number, date, enum, lov input types
   - [ ] Text
@@ -15,6 +16,7 @@
   - [ ] Lov
   - [ ] Enum
   - [ ] Date
+  - [ ] Error message (Validation)
 - [ ] Create final table UI
 - [ ] Create the table UI for time reporting
 - [ ] Configure the backend - (Drizzle, Database)

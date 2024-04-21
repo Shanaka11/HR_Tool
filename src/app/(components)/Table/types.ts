@@ -1,3 +1,5 @@
+import { AnyZodObject, ZodAny, ZodAnyDef, ZodSchema } from "zod";
+
 export type ColumnDef<T> = {
   id: string;
   name: string; // Column identifier
@@ -6,7 +8,7 @@ export type ColumnDef<T> = {
   defaultValue?: keyof T;
   size?: ColumnSize;
   setValue?: (row: T, value: keyof T) => T;
-  validationMethod?: (value: keyof T) => string | undefined;
+  validationSchema?: ZodSchema;
   editable?: boolean;
   insertable?: boolean;
   sortable?: boolean;

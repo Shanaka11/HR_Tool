@@ -4,6 +4,7 @@ import DataTable from "@/app/(components)/Table/DataTable";
 import DataTableProvider from "@/app/(components)/Table/DataTableProvider";
 import { ColumnDef } from "@/app/(components)/Table/types";
 import React from "react";
+import { z } from "zod";
 
 import { Project } from "../page";
 
@@ -32,6 +33,9 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
           ["name"]: value,
         };
       },
+      validationSchema: z
+        .string()
+        .max(10, { message: "Name cannot be larger than 10 characters" }),
     },
     {
       id: "3",

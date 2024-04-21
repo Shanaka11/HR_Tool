@@ -8,8 +8,10 @@ import {
   useStore,
 } from "jotai";
 import React from "react";
+import { ZodSchema } from "zod";
 
 import { BaseDataItem } from "./DataTable";
+import DataTableEditableCell from "./DataTableEditableCell";
 import { colsAtom, selectRowAtom, tableStateAtom } from "./DataTableStore";
 import { RowDef } from "./types";
 
@@ -37,17 +39,11 @@ const DataTableRow = <T extends BaseDataItem>({
     handleRowSelect(rowAtom, holdShift, index);
   };
 
-  const handleValueUpdate = (
-    value: string,
-    updateFunction?: (row: any, value: string | number | symbol) => any,
-  ) => {
-    // Do field validation here as well, use zod schema validation and define the schema in the column def, if there is a validation error, show it in the relevent cell
-    if (updateFunction === undefined)
-      throw new Error("setValue function undefined in the column defintion");
+  const updateRow = (row: T) => {
     setRow((prev) => {
       return {
         ...prev,
-        dataItem: updateFunction(prev.dataItem, value),
+        dataItem: row,
       };
     });
   };
@@ -59,16 +55,22 @@ const DataTableRow = <T extends BaseDataItem>({
           <Checkbox className="block" checked={row.selected} disabled={true} />
         </TableCell>
         {columns.map((column) => (
-          <TableCell key={`${row.dataItem.id}-${column.header}`}>
-            {/* Dependint on the column type show the correct input type */}
-            <input
-              defaultValue={column.getValue(row.dataItem) as string}
-              className="border"
-              onBlur={(event) =>
-                handleValueUpdate(event.target.value, column.setValue)
-              }
-            />
-          </TableCell>
+          <DataTableEditableCell
+            updateRow={updateRow}
+            key={`${row.dataItem.id}-${column.header}`}
+            column={column}
+            row={row}
+          />
+          // <TableCell key={`${row.dataItem.id}-${column.header}`}>
+          //   {/* Dependint on the column type show the correct input type */}
+          //   <input
+          //     defaultValue={column.getValue(row.dataItem) as string}
+          //     className="border"
+          //     onBlur={(event) =>
+          //       handleValueUpdate(event.target.value, column.setValue)
+          //     }
+          //   />
+          // </TableCell>
         ))}
       </TableRow>
     );
