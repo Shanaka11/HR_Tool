@@ -18,8 +18,10 @@
   - [ ] Enum
   - [ ] Date
   - [ ] Error message (Validation)
+- [ ] Try to optimize re rendering in tables
 - [ ] Create final table UI
 - [ ] Create Alternate table UI/ the shadcn one will be the list view and the alternate on will be the table view (like in ifs)
+- [ ] Handle table data loading (Loading skeleton for table / forms)
 - [ ] Create the table UI for time reporting
 - [ ] Configure the backend - (Drizzle, Database)
 - [ ] Add pages to User, Company, Employee, Project, Activity, Customer entities
