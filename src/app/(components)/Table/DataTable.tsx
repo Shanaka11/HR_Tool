@@ -22,8 +22,8 @@ export type BaseDataItem = {
 type DataTableProps<T extends BaseDataItem> = {
   data: T[];
   columnDefinition: ColumnDef<T>[];
-  handleDelete: (dataToBeDeleted: T[]) => void;
-  handleUpdate: (dataToBeUpdated: T[]) => void;
+  handleDelete: (dataToBeDeleted: T[]) => Promise<void>;
+  handleUpdate: (dataToBeUpdated: T[]) => Promise<void>;
   handleCreate: (dataToBeCreated: T[]) => void;
 };
 

@@ -18,6 +18,7 @@
   - [ ] Date
   - [ ] Error message (Validation)
 - [ ] Create final table UI
+- [ ] Create Alternate table UI/ the shadcn one will be the list view and the alternate on will be the table view (like in ifs)
 - [ ] Create the table UI for time reporting
 - [ ] Configure the backend - (Drizzle, Database)
 - [ ] Add pages to User, Company, Employee, Project, Activity, Customer entities

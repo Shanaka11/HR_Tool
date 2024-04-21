@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 
 import "./globals.css";
 
+import { Toaster } from "@/components/ui/toaster";
 import { getServerSession } from "next-auth";
 
 import MainPageLayout from "./(components)/MainPageLayout";
@@ -29,6 +30,7 @@ export default async function RootLayout({
       <body className={inter.className}>
         <SessionProvider session={session}>
           <UserProvder userInfo={{ name: session?.user?.name }}>
+            <Toaster />
             <main className="grid grid-rows-[3.5rem_1fr] h-dvh">
               <TitleBar />
               <MainPageLayout>{children}</MainPageLayout>

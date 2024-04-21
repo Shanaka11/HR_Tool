@@ -3,6 +3,7 @@
 import DataTable from "@/app/(components)/Table/DataTable";
 import DataTableProvider from "@/app/(components)/Table/DataTableProvider";
 import { ColumnDef } from "@/app/(components)/Table/types";
+import { sleep } from "@/lib/sleep";
 import React from "react";
 import { z } from "zod";
 
@@ -52,11 +53,13 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
     },
   ];
 
-  const handleDelete = (dataToBeDeleted: Project[]) => {
+  const handleDelete = async (dataToBeDeleted: Project[]) => {
+    sleep();
     console.log(dataToBeDeleted);
+    throw new Error("Could not be deleted");
   };
 
-  const handleUpdate = (dataToBeUpdated: Project[]) => {
+  const handleUpdate = async (dataToBeUpdated: Project[]) => {
     console.log(dataToBeUpdated);
   };
 

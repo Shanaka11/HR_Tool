@@ -237,6 +237,11 @@ const handleAllowSave = (get: Getter) => {
   return true;
 };
 
+const handleDeleteRows = (get: Getter, set: Setter) => {
+  set(rowsAtom, (prev) => prev.filter((row) => row.markedFor !== "DELETE"));
+  set(tableStateAtom, "READ");
+};
+
 // Action Atoms
 // Load data to table
 export const loadRowsAtom = atom(null, (get, set, data: unknown[]) => {
@@ -257,7 +262,8 @@ export const tableStateAtom = atom<"CREATE" | "READ" | "UPDATE" | "DELETE">(
 export const allowMarkDeleteAtom = atom(handleAllowMarkDelete);
 // Mark Delete
 export const markDeleteRowAtom = atom(null, handleMarkDelete);
-
+// Delete Success
+export const deleteRowsAtom = atom(null, handleDeleteRows);
 // Allow Cancel Mark
 export const allowCancelMarkAtom = atom(handleAllowMarkCancel);
 // Cancle Mark

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 import { useAtomValue, useSetAtom, useStore } from "jotai";
 import { Pencil, Plus, Save, Trash2, X } from "lucide-react";
 import React from "react";
@@ -9,14 +10,15 @@ import {
   allowSaveRowAtom,
   cancleRowMarkAtom,
   changedDataAtom,
+  deleteRowsAtom,
   markCreateRowAtom,
   markDeleteRowAtom,
   markUpdateRowAtom,
 } from "./DataTableStore";
 
 type DataTableToolaBarProps<T> = {
-  handleDelete: (dataToBeDeleted: T[]) => void;
-  handleUpdate: (dataToBeUpdated: T[]) => void;
+  handleDelete: (dataToBeDeleted: T[]) => Promise<void>;
+  handleUpdate: (dataToBeUpdated: T[]) => Promise<void>;
   handleCreate: (dataToBeCreated: T[]) => void;
 };
 
@@ -34,16 +36,41 @@ const DataTableToolaBar = <T,>({
   const allowDelete = useAtomValue(allowMarkDeleteAtom, { store });
   const allowCancel = useAtomValue(allowCancelMarkAtom, { store });
   const allowSave = useAtomValue(allowSaveRowAtom, { store });
+  const removeDeletedRows = useSetAtom(deleteRowsAtom, { store });
 
-  const handleSave = () => {
+  const { toast } = useToast();
+
+  const handleSave = async () => {
     if (changedData.tableState === "CREATE") {
       handleCreate(changedData.rows as T[]);
       return;
     }
 
     if (changedData.tableState === "DELETE") {
-      handleDelete(changedData.rows as T[]);
-      return;
+      try {
+        await handleDelete(changedData.rows as T[]);
+        // Remove deleted data
+        removeDeletedRows();
+        toast({
+          title: "Deleted successfully",
+        });
+        return;
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          toast({
+            variant: "destructive",
+            title: "Delete unsuccessfull",
+            description: `${e.message}`,
+          });
+          return;
+        }
+        // Show error as a toast message
+        toast({
+          title: "Delete unsuccessfull",
+          description: `There was an error`,
+        });
+        throw e;
+      }
     }
 
     if (changedData.tableState === "UPDATE") {
