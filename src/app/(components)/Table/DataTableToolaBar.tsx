@@ -10,16 +10,18 @@ import {
   allowSaveRowAtom,
   cancleRowMarkAtom,
   changedDataAtom,
+  createRowsAtom,
   deleteRowsAtom,
   markCreateRowAtom,
   markDeleteRowAtom,
   markUpdateRowAtom,
+  updateRowsAtom,
 } from "./DataTableStore";
 
 type DataTableToolaBarProps<T> = {
   handleDelete: (dataToBeDeleted: T[]) => Promise<void>;
   handleUpdate: (dataToBeUpdated: T[]) => Promise<void>;
-  handleCreate: (dataToBeCreated: T[]) => void;
+  handleCreate: (dataToBeCreated: T[]) => Promise<T[]>;
 };
 
 const DataTableToolaBar = <T,>({
@@ -37,13 +39,23 @@ const DataTableToolaBar = <T,>({
   const allowCancel = useAtomValue(allowCancelMarkAtom, { store });
   const allowSave = useAtomValue(allowSaveRowAtom, { store });
   const removeDeletedRows = useSetAtom(deleteRowsAtom, { store });
+  const addCreatedRows = useSetAtom(createRowsAtom, { store });
+  const addUpdatedRows = useSetAtom(updateRowsAtom, { store });
 
   const { toast } = useToast();
 
   const handleSave = async () => {
     if (changedData.tableState === "CREATE") {
-      handleCreate(changedData.rows as T[]);
-      return;
+      try {
+        const createdData = await handleCreate(changedData.rows as T[]);
+        addCreatedRows(createdData);
+        toast({
+          title: "Created successfully",
+        });
+        return;
+      } catch (e) {
+        handleCrudError(e);
+      }
     }
 
     if (changedData.tableState === "DELETE") {
@@ -56,27 +68,39 @@ const DataTableToolaBar = <T,>({
         });
         return;
       } catch (e: unknown) {
-        if (e instanceof Error) {
-          toast({
-            variant: "destructive",
-            title: "Delete unsuccessfull",
-            description: `${e.message}`,
-          });
-          return;
-        }
-        // Show error as a toast message
-        toast({
-          title: "Delete unsuccessfull",
-          description: `There was an error`,
-        });
-        throw e;
+        handleCrudError(e);
       }
     }
 
     if (changedData.tableState === "UPDATE") {
-      handleUpdate(changedData.rows as T[]);
+      try {
+        await handleUpdate(changedData.rows as T[]);
+        addUpdatedRows();
+        toast({
+          title: "Updated successfully",
+        });
+        return;
+      } catch (e: unknown) {
+        handleCrudError(e);
+      }
+    }
+  };
+
+  const handleCrudError = (e: unknown) => {
+    if (e instanceof Error) {
+      toast({
+        variant: "destructive",
+        title: "Delete unsuccessfull",
+        description: `${e.message}`,
+      });
       return;
     }
+    // Show error as a toast message
+    toast({
+      title: "Delete unsuccessfull",
+      description: `There was an error`,
+    });
+    throw e;
   };
 
   return (

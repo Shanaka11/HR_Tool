@@ -54,17 +54,20 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
   ];
 
   const handleDelete = async (dataToBeDeleted: Project[]) => {
-    sleep();
+    await sleep(2000);
     console.log(dataToBeDeleted);
     throw new Error("Could not be deleted");
   };
 
   const handleUpdate = async (dataToBeUpdated: Project[]) => {
+    await sleep(2000);
     console.log(dataToBeUpdated);
   };
 
-  const handleCreate = (dataToBeCreated: Project[]) => {
+  const handleCreate = async (dataToBeCreated: Project[]) => {
+    await sleep(2000);
     console.log(dataToBeCreated);
+    return dataToBeCreated;
   };
 
   return (

@@ -24,7 +24,7 @@ type DataTableProps<T extends BaseDataItem> = {
   columnDefinition: ColumnDef<T>[];
   handleDelete: (dataToBeDeleted: T[]) => Promise<void>;
   handleUpdate: (dataToBeUpdated: T[]) => Promise<void>;
-  handleCreate: (dataToBeCreated: T[]) => void;
+  handleCreate: (dataToBeCreated: T[]) => Promise<T[]>;
 };
 
 const DataTable = <T extends BaseDataItem>({

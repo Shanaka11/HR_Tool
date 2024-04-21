@@ -242,6 +242,33 @@ const handleDeleteRows = (get: Getter, set: Setter) => {
   set(tableStateAtom, "READ");
 };
 
+const handleCreateRows = (get: Getter, set: Setter, createdData: unknown[]) => {
+  const newRows: RowDef<unknown>[] = createdData.map((createdDataItem) => {
+    return {
+      selected: false,
+      markedFor: "READ",
+      dataItem: createdDataItem,
+    };
+  });
+  set(rowsAtom, (prev) => [...newRows, ...prev]);
+  set(newRowsAtom, []);
+  set(tableStateAtom, "READ");
+};
+
+const handleUpdateRows = (get: Getter, set: Setter) => {
+  const rowAtomsAtom = get(rowAtoms);
+  rowAtomsAtom.forEach((rowAtom) => {
+    const row = get(rowAtom);
+    if (row.markedFor === "UPDATE") {
+      set(rowAtom, {
+        ...row,
+        selected: false,
+        markedFor: "READ",
+      });
+    }
+  });
+  set(tableStateAtom, "READ");
+};
 // Action Atoms
 // Load data to table
 export const loadRowsAtom = atom(null, (get, set, data: unknown[]) => {
@@ -271,9 +298,13 @@ export const cancleRowMarkAtom = atom(null, handleMarkCancel);
 
 // Mark Update
 export const markUpdateRowAtom = atom(null, handleMarkUpdate);
-
+// Update Success
+export const updateRowsAtom = atom(null, handleUpdateRows);
 // Mark Create
 export const markCreateRowAtom = atom(null, handleMarkCreate);
+
+// Create Success
+export const createRowsAtom = atom(null, handleCreateRows);
 
 // Allow Save
 export const allowSaveRowAtom = atom(handleAllowSave);
