@@ -239,7 +239,8 @@ const handleAllowSave = (get: Getter) => {
 };
 
 const handleDeleteRows = (get: Getter, set: Setter) => {
-  set(rowsAtom, (prev) => prev.filter((row) => row.markedFor !== "DELETE"));
+  const rows = get(rowsAtom).filter((row) => row.markedFor !== "DELETE");
+  set(rowsAtom, rows);
   set(tableStateAtom, "READ");
 };
 
@@ -270,6 +271,12 @@ const handleUpdateRows = (get: Getter, set: Setter) => {
   });
   set(tableStateAtom, "READ");
 };
+
+const handleResetOriginalRows = (get: Getter, set: Setter) => {
+  const rows = get(rowsAtom);
+  set(originalRowsAtom, rows);
+};
+
 // Action Atoms
 // Load data to table
 export const loadRowsAtom = atom(null, (get, set, data: unknown[]) => {
@@ -311,6 +318,9 @@ export const createRowsAtom = atom(null, handleCreateRows);
 export const allowSaveRowAtom = atom(handleAllowSave);
 // Save Action
 export const changedDataAtom = atom(getChangedData);
+
+// Reset Original Rows
+export const resetOriginalRowsAtom = atom(null, handleResetOriginalRows);
 
 // Column Definition
 export const colsAtom = atom<ColumnDef<any>[]>([]);

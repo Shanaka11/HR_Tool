@@ -54,12 +54,13 @@ const DataTableRow = <T extends BaseDataItem>({
         <TableCell>
           <Checkbox className="block" checked={row.selected} disabled={true} />
         </TableCell>
-        {columns.map((column) => (
+        {columns.map((column, index) => (
           <DataTableEditableCell
             updateRow={updateRow}
             key={`${row.dataItem.id}-${column.header}`}
             column={column}
             row={row}
+            isFirstCellofRow={index === 0}
           />
         ))}
       </TableRow>

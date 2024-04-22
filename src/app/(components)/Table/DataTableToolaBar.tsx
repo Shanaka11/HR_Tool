@@ -17,6 +17,7 @@ import {
   markCreateRowAtom,
   markDeleteRowAtom,
   markUpdateRowAtom,
+  resetOriginalRowsAtom,
   updateRowsAtom,
 } from "./DataTableStore";
 
@@ -46,6 +47,7 @@ const DataTableToolaBar = <T,>({
   const [isTableLoading, setIsTableLoading] = useAtom(isTableLoadingAtom, {
     store,
   });
+  const resetOriginalRows = useSetAtom(resetOriginalRowsAtom, { store });
 
   const { toast } = useToast();
 
@@ -58,6 +60,7 @@ const DataTableToolaBar = <T,>({
         toast({
           title: "Created successfully",
         });
+        resetOriginalRows();
         setIsTableLoading(false);
         return;
       } catch (e) {
@@ -74,6 +77,7 @@ const DataTableToolaBar = <T,>({
         toast({
           title: "Deleted successfully",
         });
+        resetOriginalRows();
         setIsTableLoading(false);
         return;
       } catch (e: unknown) {
@@ -89,6 +93,7 @@ const DataTableToolaBar = <T,>({
         toast({
           title: "Updated successfully",
         });
+        resetOriginalRows();
         setIsTableLoading(false);
         return;
       } catch (e: unknown) {

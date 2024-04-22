@@ -17,6 +17,7 @@
   - [ ] Lov
   - [ ] Enum
   - [ ] Date
+  - [ ] Boolean
   - [ ] Error message (Validation)
 - [ ] Try to optimize re rendering in tables
 - [ ] Create final table UI
