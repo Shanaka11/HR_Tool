@@ -1,14 +1,9 @@
-import { TableCell } from "@/components/ui/table";
-import {
-  PrimitiveAtom,
-  useAtom,
-  useAtomValue,
-  useSetAtom,
-  useStore,
-} from "jotai";
+import { ValueOf } from "@/lib/valueOf";
+import { useAtomValue, useSetAtom, useStore } from "jotai";
 import React, { useState } from "react";
 
 import { isTableLoadingAtom, isTableValidAtom } from "./DataTableStore";
+import Number from "./EditableCells/Number";
 import Text from "./EditableCells/Text";
 import { ColumnDef, RowDef } from "./types";
 
@@ -18,6 +13,16 @@ type DataTableEditableCellProps<T> = {
   updateRow: (value: T) => void;
   isFirstCellofRow?: boolean;
 };
+
+type InputProps = {
+  defaultValue: number;
+  handleOnBlur: (value: number) => void;
+  disabled: boolean;
+  error?: string;
+  required?: boolean;
+  firstCell?: boolean;
+};
+
 const DataTableEditableCell = <T,>({
   row,
   column,
@@ -30,7 +35,7 @@ const DataTableEditableCell = <T,>({
   const isTableLoading = useAtomValue(isTableLoadingAtom, {
     store,
   });
-  const handleValueUpdate = (value: string) => {
+  const handleValueUpdate = (value: string | number | Date) => {
     // Do field validation here as well, use zod schema validation and define the schema in the column def, if there is a validation error, show it in the relevent cell
     if (column.validationSchema !== undefined) {
       const validationResult = column.validationSchema.safeParse(value);
@@ -51,12 +56,23 @@ const DataTableEditableCell = <T,>({
 
     setError("");
     setIsTableValid(true);
-    updateRow(column.setValue(row.dataItem, value as keyof T));
+    updateRow(column.setValue(row.dataItem, value as ValueOf<T>));
   };
 
-  return (
-    <TableCell className={`p-0 ${isFirstCellofRow ? `pl-4` : ""} relative`}>
-      {/* Dependint on the column type show the correct input type */}
+  if (column.columnType === "NUMBER") {
+    return (
+      <Number
+        defaultValue={column.getValue(row.dataItem) as number}
+        handleOnBlur={handleValueUpdate}
+        disabled={isTableLoading}
+        error={error}
+        required={false}
+        firstCell={isFirstCellofRow}
+      />
+    );
+  }
+  if (column.columnType === "TEXT" || column.columnType === undefined) {
+    return (
       <Text
         defaultValue={column.getValue(row.dataItem) as string}
         handleOnBlur={handleValueUpdate}
@@ -65,15 +81,8 @@ const DataTableEditableCell = <T,>({
         required={false}
         firstCell={isFirstCellofRow}
       />
-      {/* <input
-        defaultValue={column.getValue(row.dataItem) as string}
-        className="border"
-        onBlur={(event) => handleValueUpdate(event.target.value)}
-        disabled={isTableLoading}
-      /> */}
-      {/* {error !== "" && <p>{error}</p>} */}
-    </TableCell>
-  );
+    );
+  }
 };
 
 export default DataTableEditableCell;

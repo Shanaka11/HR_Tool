@@ -12,13 +12,15 @@
 - [x] Handle success / error states when duing the actual CRUD operations (revert data as needed)
 - [x] Handle loading state when mutation is ongoing. (text fields / Toolbar should be disabled during the mutation)
 - [ ] Create cells for, text, number, date, enum, lov input types
-  - [ ] Text
-  - [ ] Number
+  - [x] Text
+  - [x] Number
   - [ ] Lov
-  - [ ] Enum
+  - [ ] Enum (Nullable | Not Nullable)
   - [ ] Date
-  - [ ] Boolean
-  - [ ] Error message (Validation)
+  - [ ] Boolean (Nullable | Not Nullable)
+  - [x] Error message (Validation)
+- [ ] Handle Required fields (Styling and checking when saving)
+- [ ] Navigate when clicked on the link where applicable 
 - [ ] Try to optimize re rendering in tables
 - [ ] Create final table UI
 - [ ] Create Alternate table UI/ the shadcn one will be the list view and the alternate on will be the table view (like in ifs)

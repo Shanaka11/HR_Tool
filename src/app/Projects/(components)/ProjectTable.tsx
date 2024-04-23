@@ -29,6 +29,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       getValue: (row) => row.name,
       size: "LARGE",
       setValue: (row, value) => {
+        if (typeof value !== "string") throw new Error("Incorrect value type");
         return {
           ...row,
           ["name"]: value,
@@ -37,6 +38,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       validationSchema: z
         .string()
         .max(10, { message: "Name cannot be larger than 10 characters" }),
+      columnType: "TEXT",
     },
     {
       id: "3",
@@ -45,11 +47,28 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       getValue: (row) => row.contactPerson,
       size: "MEDIUM",
       setValue: (row, value) => {
+        if (typeof value !== "string") throw new Error("Incorrect value type");
         return {
           ...row,
           ["contactPerson"]: value,
         };
       },
+      columnType: "TEXT",
+    },
+    {
+      id: "4",
+      name: "age",
+      header: "Age",
+      getValue: (row) => row.age,
+      size: "SMALL",
+      setValue: (row, value) => {
+        if (typeof value !== "number") throw new Error("Incorrect value type");
+        return {
+          ...row,
+          ["age"]: value,
+        };
+      },
+      columnType: "NUMBER",
     },
   ];
 
