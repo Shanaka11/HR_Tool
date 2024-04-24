@@ -8,8 +8,8 @@ import {
 import React, { useState } from "react";
 
 type NumberProps = {
-  defaultValue: number;
-  handleOnBlur: (value: number) => void;
+  defaultValue: string;
+  handleOnBlur: (value: string) => void;
   disabled: boolean;
   error?: string;
   required?: boolean;
@@ -32,10 +32,9 @@ export const Number = ({
     return (
       <Input
         className={`w-full h-12 rounded-none focus-visible:ring-0 border-t-0 border-b-0 border-r border-l-0 focus:border focus:border-primary ${firstCell ? "border-l" : ""}`}
-        type="number"
         value={value}
         onChange={(event) => setValue(event.target.value)}
-        onBlur={() => handleOnBlur(+value)}
+        onBlur={() => handleOnBlur(value)}
         disabled={disabled}
       />
     );
@@ -47,7 +46,7 @@ export const Number = ({
         <TooltipTrigger className="w-full">
           <Input
             className={`w-full h-12 rounded-none focus-visible:ring-0  focus:border focus:border-destructive bg-red-300 ${firstCell ? "border-l" : ""}`}
-            onBlur={() => handleOnBlur(+value)}
+            onBlur={() => handleOnBlur(value)}
             disabled={disabled}
             value={value}
             onChange={(event) => setValue(event.target.value)}

@@ -4,6 +4,7 @@ import DataTable from "@/app/(components)/Table/DataTable";
 import DataTableProvider from "@/app/(components)/Table/DataTableProvider";
 import { ColumnDef } from "@/app/(components)/Table/types";
 import { sleep } from "@/lib/sleep";
+import { getDateString } from "@/lib/tableUtils";
 import React from "react";
 import { z } from "zod";
 
@@ -29,7 +30,6 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       getValue: (row) => row.name,
       size: "LARGE",
       setValue: (row, value) => {
-        if (typeof value !== "string") throw new Error("Incorrect value type");
         return {
           ...row,
           ["name"]: value,
@@ -47,7 +47,6 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       getValue: (row) => row.contactPerson,
       size: "MEDIUM",
       setValue: (row, value) => {
-        if (typeof value !== "string") throw new Error("Incorrect value type");
         return {
           ...row,
           ["contactPerson"]: value,
@@ -59,16 +58,16 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       id: "4",
       name: "age",
       header: "Age",
-      getValue: (row) => row.age,
-      size: "SMALL",
+      getValue: (row) => getDateString(row.age),
+      size: "MEDIUM",
       setValue: (row, value) => {
-        if (typeof value !== "number") throw new Error("Incorrect value type");
         return {
           ...row,
-          ["age"]: value,
+          ["age"]: new Date(value),
         };
       },
-      columnType: "NUMBER",
+      columnType: "DATE",
+      validationSchema: z.date(),
     },
   ];
 

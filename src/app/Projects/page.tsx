@@ -6,7 +6,7 @@ export type Project = {
   id: string;
   name: string;
   contactPerson: string;
-  age?: number;
+  age?: Date;
 };
 
 const projects: Project[] = [
@@ -19,7 +19,7 @@ const projects: Project[] = [
     id: "2",
     name: "Project B",
     contactPerson: "Alice Smith",
-    age: 12,
+    age: new Date(),
   },
   {
     id: "3",

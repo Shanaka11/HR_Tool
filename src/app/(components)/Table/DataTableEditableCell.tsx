@@ -1,8 +1,8 @@
-import { ValueOf } from "@/lib/valueOf";
 import { useAtomValue, useSetAtom, useStore } from "jotai";
 import React, { useState } from "react";
 
 import { isTableLoadingAtom, isTableValidAtom } from "./DataTableStore";
+import DateInput from "./EditableCells/DateInput";
 import Number from "./EditableCells/Number";
 import Text from "./EditableCells/Text";
 import { ColumnDef, RowDef } from "./types";
@@ -35,7 +35,7 @@ const DataTableEditableCell = <T,>({
   const isTableLoading = useAtomValue(isTableLoadingAtom, {
     store,
   });
-  const handleValueUpdate = (value: string | number | Date) => {
+  const handleValueUpdate = (value: string) => {
     // Do field validation here as well, use zod schema validation and define the schema in the column def, if there is a validation error, show it in the relevent cell
     if (column.validationSchema !== undefined) {
       const validationResult = column.validationSchema.safeParse(value);
@@ -56,13 +56,25 @@ const DataTableEditableCell = <T,>({
 
     setError("");
     setIsTableValid(true);
-    updateRow(column.setValue(row.dataItem, value as ValueOf<T>));
+    updateRow(column.setValue(row.dataItem, value));
   };
+
+  if (column.columnType === "DATE") {
+    return (
+      <DateInput
+        defaultValue={column.getValue(row.dataItem) as string}
+        handleOnBlur={handleValueUpdate}
+        disabled={isTableLoading}
+        error={error}
+        firstCell={isFirstCellofRow}
+      />
+    );
+  }
 
   if (column.columnType === "NUMBER") {
     return (
       <Number
-        defaultValue={column.getValue(row.dataItem) as number}
+        defaultValue={column.getValue(row.dataItem) as string}
         handleOnBlur={handleValueUpdate}
         disabled={isTableLoading}
         error={error}
