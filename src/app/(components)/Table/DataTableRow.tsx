@@ -8,8 +8,8 @@ import {
   useStore,
 } from "jotai";
 import React from "react";
-import { ZodSchema } from "zod";
 
+import BooleanCell from "./Cells/BooleanCell";
 import { BaseDataItem } from "./DataTable";
 import DataTableEditableCell from "./DataTableEditableCell";
 import { colsAtom, selectRowAtom, tableStateAtom } from "./DataTableStore";
@@ -83,11 +83,20 @@ const DataTableRow = <T extends BaseDataItem>({
           disabled={tableState !== "READ"}
         />
       </TableCell>
-      {columns.map((column) => (
-        <TableCell key={`${row.dataItem.id}-${column.header}`}>
-          {column.getValue(row.dataItem) as string}
-        </TableCell>
-      ))}
+      {columns.map((column) => {
+        if (column.columnType === "BOOLEAN") {
+          return (
+            <TableCell key={`${row.dataItem.id}-${column.header}`}>
+              <BooleanCell value={column.getValue(row.dataItem) === "true"} />
+            </TableCell>
+          );
+        }
+        return (
+          <TableCell key={`${row.dataItem.id}-${column.header}`}>
+            {column.getValue(row.dataItem) as string}
+          </TableCell>
+        );
+      })}
     </TableRow>
   );
 };

@@ -19,7 +19,8 @@
   - [ ] Enum (Nullable | Not Nullable)
   - [x] Date (Fix issues)
   - [ ] Boolean (Nullable | Not Nullable)
-  - [ ] Error message (Validation)
+  - [x] Error message (Validation)
+  - [ ] Custom render element
 - [ ] Handle Required fields (Styling and checking when saving)
 - [ ] Navigate when clicked on the link where applicable 
 - [ ] Try to optimize re rendering in tables

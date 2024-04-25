@@ -1,25 +1,16 @@
 import { ValueOf } from "@/lib/valueOf";
-import { ZodSchema } from "zod";
+import { nullable, ZodSchema } from "zod";
 
-export type ColumnType = "TEXT" | "NUMBER" | "DATE";
+export type ColumnType = "TEXT" | "NUMBER" | "DATE" | "BOOLEAN";
 export type ColPermission =
   | "READONLY"
   | "INSERTONLY"
   | "UPDATEONLY"
   | "UPSERTONLY";
 
-// export type SelectionComponentProps =
-// | { expand?: false } & { options: SelectProps }
-// | { expand: true; multiple?: false } & { options: RadioGroupProps }
-// | { expand: true; multiple: true } & { options: CheckboxGroupProps };
-
 export type ColumnDef<T> =
   | ({ columnPermission: "READONLY" } & BaseColDef<T>)
   | (BaseColDef<T> & EditableColDef<T>);
-//export type ColumnDef<T> = BaseColDef<T> & EditableColDef<T>;
-// export type ColumnDef<T> = ColPermission extends "READONLY"
-//   ? BaseColDef<T>
-//   : BaseColDef<T> & EditableColDef<T>;
 
 type BaseColDef<T> = {
   name: string; // Column identifier
@@ -34,6 +25,7 @@ type BaseColDef<T> = {
   filterable?: boolean;
   columnType?: ColumnType;
   columnPermission: ColPermission;
+  mandatory?: boolean;
 };
 
 type EditableColDef<T> = {

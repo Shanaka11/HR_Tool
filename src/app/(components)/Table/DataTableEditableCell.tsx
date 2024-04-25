@@ -2,6 +2,7 @@ import { useAtomValue, useSetAtom, useStore } from "jotai";
 import React, { useState } from "react";
 
 import { isTableLoadingAtom, isTableValidAtom } from "./DataTableStore";
+import BooleanInput from "./EditableCells/BooleanInput";
 import DateInput from "./EditableCells/DateInput";
 import Number from "./EditableCells/Number";
 import Text from "./EditableCells/Text";
@@ -41,11 +42,15 @@ const DataTableEditableCell = <T,>({
 
     if (column.validationSchema !== undefined) {
       let parsedValue: any = value;
+
       if (column.columnType === "DATE") {
         parsedValue = new Date(value);
       }
       if (column.columnType === "NUMBER") {
         parsedValue = +value;
+      }
+      if (column.columnType === "BOOLEAN") {
+        parsedValue = value === "true";
       }
       const validationResult = column.validationSchema.safeParse(parsedValue);
 
@@ -68,6 +73,17 @@ const DataTableEditableCell = <T,>({
     updateRow(column.setValue(row.dataItem, value));
   };
 
+  if (column.columnType === "BOOLEAN") {
+    return (
+      <BooleanInput
+        defaultValue={column.getValue(row.dataItem) as string}
+        handleOnBlur={handleValueUpdate}
+        disabled={isTableLoading || column.columnPermission === "READONLY"}
+        error={error}
+        firstCell={isFirstCellofRow}
+      />
+    );
+  }
   if (column.columnType === "DATE") {
     return (
       <DateInput

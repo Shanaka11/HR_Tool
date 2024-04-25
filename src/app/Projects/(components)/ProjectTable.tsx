@@ -74,6 +74,22 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       validationSchema: z.date(),
       columnPermission: "UPSERTONLY",
     },
+    {
+      id: "5",
+      name: "adult",
+      header: "Adult",
+      getValue: (row) => row.adult?.toString(),
+      columnPermission: "UPSERTONLY",
+      columnType: "BOOLEAN",
+      size: "SMALL",
+      setValue: (row, value) => {
+        return {
+          ...row,
+          ["adult"]: value === "true",
+        };
+      },
+      validationSchema: z.boolean(),
+    },
   ];
 
   const handleDelete = async (dataToBeDeleted: Project[]) => {
