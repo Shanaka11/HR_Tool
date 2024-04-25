@@ -18,7 +18,7 @@
   - [ ] Lov
   - [ ] Enum (Nullable | Not Nullable)
   - [x] Date (Fix issues)
-  - [ ] Boolean (Nullable | Not Nullable)
+  - [x] Boolean
   - [x] Error message (Validation)
   - [ ] Custom render element
 - [ ] Handle Required fields (Styling and checking when saving)
