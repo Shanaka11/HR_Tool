@@ -17,7 +17,7 @@
   - [x] Number
   - [ ] Lov
   - [ ] Enum (Nullable | Not Nullable)
-  - [ ] Date
+  - [x] Date (Fix issues)
   - [ ] Boolean (Nullable | Not Nullable)
   - [ ] Error message (Validation)
 - [ ] Handle Required fields (Styling and checking when saving)

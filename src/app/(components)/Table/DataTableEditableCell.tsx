@@ -38,8 +38,15 @@ const DataTableEditableCell = <T,>({
   const handleValueUpdate = (value: string) => {
     // Do field validation here as well, use zod schema validation and define the schema in the column def, if there is a validation error, show it in the relevent cell
     if (column.validationSchema !== undefined) {
-      const validationResult = column.validationSchema.safeParse(value);
-      console.log(value, validationResult);
+      let parsedValue: any = value;
+      if (column.columnType === "DATE") {
+        parsedValue = new Date(value);
+      }
+      if (column.columnType === "NUMBER") {
+        parsedValue = +value;
+      }
+      const validationResult = column.validationSchema.safeParse(parsedValue);
+
       if (!validationResult.success) {
         if (validationResult.error.formErrors.formErrors.length > 0) {
           setError(validationResult.error.formErrors.formErrors[0]);
