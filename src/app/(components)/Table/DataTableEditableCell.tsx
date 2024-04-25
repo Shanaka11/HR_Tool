@@ -35,8 +35,10 @@ const DataTableEditableCell = <T,>({
   const isTableLoading = useAtomValue(isTableLoadingAtom, {
     store,
   });
+
   const handleValueUpdate = (value: string) => {
-    // Do field validation here as well, use zod schema validation and define the schema in the column def, if there is a validation error, show it in the relevent cell
+    if (column.columnPermission === "READONLY") return;
+
     if (column.validationSchema !== undefined) {
       let parsedValue: any = value;
       if (column.columnType === "DATE") {
@@ -71,7 +73,7 @@ const DataTableEditableCell = <T,>({
       <DateInput
         defaultValue={column.getValue(row.dataItem) as string}
         handleOnBlur={handleValueUpdate}
-        disabled={isTableLoading}
+        disabled={isTableLoading || column.columnPermission === "READONLY"}
         error={error}
         firstCell={isFirstCellofRow}
       />
@@ -83,7 +85,7 @@ const DataTableEditableCell = <T,>({
       <Number
         defaultValue={column.getValue(row.dataItem) as string}
         handleOnBlur={handleValueUpdate}
-        disabled={isTableLoading}
+        disabled={isTableLoading || column.columnPermission === "READONLY"}
         error={error}
         required={false}
         firstCell={isFirstCellofRow}
@@ -95,7 +97,7 @@ const DataTableEditableCell = <T,>({
       <Text
         defaultValue={column.getValue(row.dataItem) as string}
         handleOnBlur={handleValueUpdate}
-        disabled={isTableLoading}
+        disabled={isTableLoading || column.columnPermission === "READONLY"}
         error={error}
         required={false}
         firstCell={isFirstCellofRow}

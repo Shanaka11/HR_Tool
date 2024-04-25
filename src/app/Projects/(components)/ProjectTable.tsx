@@ -22,6 +22,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       name: "id",
       getValue: (row) => row.id,
       hidden: true,
+      columnPermission: "READONLY",
     },
     {
       id: "2",
@@ -39,6 +40,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
         .string()
         .max(10, { message: "Name cannot be larger than 10 characters" }),
       columnType: "TEXT",
+      columnPermission: "UPSERTONLY",
     },
     {
       id: "3",
@@ -53,6 +55,8 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
         };
       },
       columnType: "TEXT",
+      columnPermission: "UPSERTONLY",
+      validationSchema: z.string(),
     },
     {
       id: "4",
@@ -68,6 +72,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       },
       columnType: "DATE",
       validationSchema: z.date(),
+      columnPermission: "UPSERTONLY",
     },
   ];
 
