@@ -11,7 +11,7 @@
 - [x] Block save when there are any validation errors
 - [x] Handle success / error states when duing the actual CRUD operations (revert data as needed)
 - [x] Handle loading state when mutation is ongoing. (text fields / Toolbar should be disabled during the mutation)
-- [ ] Change the column def so setValue, validationSchema are not required when the column is readonly
+- [x] Change the column def so setValue, validationSchema are not required when the column is readonly
 - [ ] Create cells for, text, number, date, enum, lov input types
   - [x] Text
   - [x] Number
