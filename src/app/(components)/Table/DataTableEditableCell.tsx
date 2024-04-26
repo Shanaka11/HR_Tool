@@ -40,37 +40,64 @@ const DataTableEditableCell = <T,>({
   const handleValueUpdate = (value: string) => {
     if (column.columnPermission === "READONLY") return;
 
-    if (column.validationSchema !== undefined) {
-      let parsedValue: any = value;
+    let parsedValue: any = value;
 
-      if (column.columnType === "DATE") {
-        parsedValue = new Date(value);
-      }
-      if (column.columnType === "NUMBER") {
-        parsedValue = +value;
-      }
-      if (column.columnType === "BOOLEAN") {
-        parsedValue = value === "true";
-      }
-      const validationResult = column.validationSchema.safeParse(parsedValue);
-
-      if (!validationResult.success) {
-        if (validationResult.error.formErrors.formErrors.length > 0) {
-          setError(validationResult.error.formErrors.formErrors[0]);
-          setIsTableValid(false);
-          return;
-        }
-        setIsTableValid(false);
-        console.log(validationResult);
-        throw new Error("Validation Error");
-      }
+    if (column.columnType === "DATE") {
+      parsedValue = new Date(value);
     }
-    if (column.setValue === undefined)
-      throw new Error("setValue function undefined in the column defintion");
+    if (column.columnType === "NUMBER") {
+      parsedValue = +value;
+    }
+    if (column.columnType === "BOOLEAN") {
+      parsedValue = value === "true";
+    }
+    const validationResult = column.validationSchema.safeParse(parsedValue);
+
+    if (!validationResult.success) {
+      if (validationResult.error.formErrors.formErrors.length > 0) {
+        setError(validationResult.error.formErrors.formErrors[0]);
+        setIsTableValid(false);
+        return;
+      }
+      setIsTableValid(false);
+      console.log(validationResult);
+      throw new Error("Validation Error");
+    }
 
     setError("");
     setIsTableValid(true);
-    updateRow(column.setValue(row.dataItem, value));
+    if (column.columnType == "TEXT") {
+      updateRow(
+        column.setValue(
+          row.dataItem,
+          validationResult.data as string | undefined,
+        ),
+      );
+    }
+    if (column.columnType == "NUMBER") {
+      updateRow(
+        column.setValue(
+          row.dataItem,
+          validationResult.data as number | undefined,
+        ),
+      );
+    }
+    if (column.columnType == "BOOLEAN") {
+      updateRow(
+        column.setValue(
+          row.dataItem,
+          validationResult.data as boolean | undefined,
+        ),
+      );
+    }
+    if (column.columnType == "DATE") {
+      updateRow(
+        column.setValue(
+          row.dataItem,
+          validationResult.data as Date | undefined,
+        ),
+      );
+    }
   };
 
   if (column.columnType === "BOOLEAN") {

@@ -23,6 +23,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       getValue: (row) => row.id,
       hidden: true,
       columnPermission: "READONLY",
+      columnType: "TEXT",
     },
     {
       id: "2",
@@ -33,7 +34,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       setValue: (row, value) => {
         return {
           ...row,
-          ["name"]: value,
+          ["name"]: value ?? "",
         };
       },
       validationSchema: z
@@ -51,7 +52,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       setValue: (row, value) => {
         return {
           ...row,
-          ["contactPerson"]: value,
+          ["contactPerson"]: value ?? "",
         };
       },
       columnType: "TEXT",
@@ -67,7 +68,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       setValue: (row, value) => {
         return {
           ...row,
-          ["age"]: new Date(value),
+          ["age"]: value === undefined ? undefined : new Date(value),
         };
       },
       columnType: "DATE",
@@ -85,7 +86,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       setValue: (row, value) => {
         return {
           ...row,
-          ["adult"]: value === "true",
+          ["adult"]: value,
         };
       },
       validationSchema: z.boolean(),
