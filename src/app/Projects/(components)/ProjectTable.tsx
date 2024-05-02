@@ -8,7 +8,7 @@ import { getDateString } from "@/lib/tableUtils";
 import React from "react";
 import { z } from "zod";
 
-import { Project } from "../page";
+import { Project, ProjectRoleEnum, ProjectRoleEnumType } from "../page";
 
 type ProjectTableProps = {
   data: Project[];
@@ -90,6 +90,23 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
         };
       },
       validationSchema: z.boolean(),
+    },
+    {
+      id: "6",
+      name: "role",
+      header: "Role",
+      columnType: "ENUM",
+      columnPermission: "UPSERTONLY",
+      getValue: (row) => row.role,
+      size: "MEDIUM",
+      setValue: (row, value) => {
+        return {
+          ...row,
+          ["role"]: value as ProjectRoleEnumType,
+        };
+      },
+      validationSchema: ProjectRoleEnum.optional(),
+      enumValues: ProjectRoleEnum.options,
     },
   ];
 

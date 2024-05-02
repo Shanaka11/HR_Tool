@@ -55,6 +55,7 @@ const DataTableRow = <T extends BaseDataItem>({
           <Checkbox className="block" checked={row.selected} disabled={true} />
         </TableCell>
         {columns.map((column, index) => (
+          // If the column is readonly then render a cell
           <TableCell
             key={`${row.dataItem.id}-${column.header}`}
             className={`p-0 ${index === 0 ? `pl-4` : ""} relative`}

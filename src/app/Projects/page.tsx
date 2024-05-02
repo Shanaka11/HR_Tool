@@ -1,6 +1,10 @@
 import React from "react";
+import { z } from "zod";
 
 import ProjectTable from "./(components)/ProjectTable";
+
+export const ProjectRoleEnum = z.enum(["TEACHER", "STUDENT"]);
+export type ProjectRoleEnumType = z.infer<typeof ProjectRoleEnum>;
 
 export type Project = {
   id: string;
@@ -8,6 +12,7 @@ export type Project = {
   contactPerson: string;
   age?: Date;
   adult?: boolean;
+  role?: ProjectRoleEnumType;
 };
 
 const projects: Project[] = [
@@ -27,6 +32,7 @@ const projects: Project[] = [
     id: "3",
     name: "Project C",
     contactPerson: "Bob Johnson",
+    role: ProjectRoleEnum.Enum.STUDENT,
   },
   {
     id: "4",

@@ -1,5 +1,5 @@
 export const getDateString = (date?: Date) => {
-  if (!date) return null;
+  if (!date) return undefined;
 
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");

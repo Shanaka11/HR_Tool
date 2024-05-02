@@ -1,14 +1,17 @@
 import { ValueOf } from "@/lib/valueOf";
 import {
+  EnumLike,
   nullable,
   ZodBoolean,
   ZodDate,
+  ZodEnum,
+  ZodEnumDef,
   ZodNumber,
   ZodSchema,
   ZodString,
 } from "zod";
 
-export type ColumnType = "TEXT" | "NUMBER" | "DATE" | "BOOLEAN";
+export type ColumnType = "TEXT" | "NUMBER" | "DATE" | "BOOLEAN" | "ENUM";
 export type ColPermission =
   | "READONLY"
   | "INSERTONLY"
@@ -17,7 +20,8 @@ export type ColPermission =
 
 export type ColumnDef<T> =
   | ({ columnPermission: "READONLY" } & BaseColDef<T>)
-  | (BaseColDef<T> & (StringCol<T> | NumberCol<T> | DateCol<T> | BoolCol<T>));
+  | (BaseColDef<T> &
+      (StringCol<T> | NumberCol<T> | DateCol<T> | BoolCol<T> | EnumCol<T>));
 
 type BaseColDef<T> = {
   name: string; // Column identifier
@@ -31,12 +35,6 @@ type BaseColDef<T> = {
   columnType: ColumnType;
   columnPermission: ColPermission;
   mandatory?: boolean;
-};
-
-type EditableColDef<T> = {
-  // setValue: (row: T, value: string) => T;
-  validationSchema: ZodSchema;
-  // defaultValue?: ValueOf<T>;
 };
 
 type StringCol<T> = {
@@ -65,6 +63,15 @@ type BoolCol<T> = {
   setValue: (row: T, value?: boolean) => T;
   defaultValue?: boolean;
   validationSchema: ZodBoolean;
+};
+
+// Figureout a way to handle enum cols
+type EnumCol<T> = {
+  columnType: "ENUM";
+  setValue: (row: T, value?: string) => T;
+  defaultValue?: string;
+  validationSchema: ZodSchema;
+  enumValues: string[];
 };
 
 export type RowDef<T> = {

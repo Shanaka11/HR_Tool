@@ -1,9 +1,11 @@
+import { TableCell } from "@/components/ui/table";
 import { useAtomValue, useSetAtom, useStore } from "jotai";
 import React, { useState } from "react";
 
 import { isTableLoadingAtom, isTableValidAtom } from "./DataTableStore";
 import BooleanInput from "./EditableCells/BooleanInput";
 import DateInput from "./EditableCells/DateInput";
+import EnumInput from "./EditableCells/EnumInput";
 import Number from "./EditableCells/Number";
 import Text from "./EditableCells/Text";
 import { ColumnDef, RowDef } from "./types";
@@ -13,15 +15,6 @@ type DataTableEditableCellProps<T> = {
   column: ColumnDef<T>;
   updateRow: (value: T) => void;
   isFirstCellofRow?: boolean;
-};
-
-type InputProps = {
-  defaultValue: number;
-  handleOnBlur: (value: number) => void;
-  disabled: boolean;
-  error?: string;
-  required?: boolean;
-  firstCell?: boolean;
 };
 
 const DataTableEditableCell = <T,>({
@@ -51,6 +44,9 @@ const DataTableEditableCell = <T,>({
     if (column.columnType === "BOOLEAN") {
       parsedValue = value === "true";
     }
+    if (column.columnType === "ENUM") {
+      parsedValue = value === "" ? undefined : value;
+    }
     const validationResult = column.validationSchema.safeParse(parsedValue);
 
     if (!validationResult.success) {
@@ -66,7 +62,19 @@ const DataTableEditableCell = <T,>({
 
     setError("");
     setIsTableValid(true);
-    if (column.columnType == "TEXT") {
+
+    if (column.columnType === "ENUM") {
+      updateRow(
+        column.setValue(
+          row.dataItem,
+          validationResult.data === ""
+            ? undefined
+            : (validationResult.data as string | undefined),
+        ),
+      );
+    }
+
+    if (column.columnType === "TEXT") {
       updateRow(
         column.setValue(
           row.dataItem,
@@ -74,7 +82,7 @@ const DataTableEditableCell = <T,>({
         ),
       );
     }
-    if (column.columnType == "NUMBER") {
+    if (column.columnType === "NUMBER") {
       updateRow(
         column.setValue(
           row.dataItem,
@@ -82,7 +90,7 @@ const DataTableEditableCell = <T,>({
         ),
       );
     }
-    if (column.columnType == "BOOLEAN") {
+    if (column.columnType === "BOOLEAN") {
       updateRow(
         column.setValue(
           row.dataItem,
@@ -90,7 +98,7 @@ const DataTableEditableCell = <T,>({
         ),
       );
     }
-    if (column.columnType == "DATE") {
+    if (column.columnType === "DATE") {
       updateRow(
         column.setValue(
           row.dataItem,
@@ -98,14 +106,34 @@ const DataTableEditableCell = <T,>({
         ),
       );
     }
+    if (column.columnType === "ENUM") {
+      updateRow(column.setValue(row.dataItem, validationResult.data));
+    }
   };
+
+  if (column.columnPermission === "READONLY") {
+    return null;
+  }
+
+  if (column.columnType === "ENUM") {
+    return (
+      <EnumInput
+        disabled={isTableLoading}
+        handleOnBlur={handleValueUpdate}
+        defaultValue={column.getValue(row.dataItem) as string}
+        options={column.enumValues}
+        firstCell={isFirstCellofRow}
+        error={error}
+      />
+    );
+  }
 
   if (column.columnType === "BOOLEAN") {
     return (
       <BooleanInput
         defaultValue={column.getValue(row.dataItem) as string}
         handleOnBlur={handleValueUpdate}
-        disabled={isTableLoading || column.columnPermission === "READONLY"}
+        disabled={isTableLoading}
         error={error}
         firstCell={isFirstCellofRow}
       />
@@ -116,7 +144,7 @@ const DataTableEditableCell = <T,>({
       <DateInput
         defaultValue={column.getValue(row.dataItem) as string}
         handleOnBlur={handleValueUpdate}
-        disabled={isTableLoading || column.columnPermission === "READONLY"}
+        disabled={isTableLoading}
         error={error}
         firstCell={isFirstCellofRow}
       />
@@ -128,19 +156,19 @@ const DataTableEditableCell = <T,>({
       <Number
         defaultValue={column.getValue(row.dataItem) as string}
         handleOnBlur={handleValueUpdate}
-        disabled={isTableLoading || column.columnPermission === "READONLY"}
+        disabled={isTableLoading}
         error={error}
         required={false}
         firstCell={isFirstCellofRow}
       />
     );
   }
-  if (column.columnType === "TEXT" || column.columnType === undefined) {
+  if (column.columnType === "TEXT") {
     return (
       <Text
         defaultValue={column.getValue(row.dataItem) as string}
         handleOnBlur={handleValueUpdate}
-        disabled={isTableLoading || column.columnPermission === "READONLY"}
+        disabled={isTableLoading}
         error={error}
         required={false}
         firstCell={isFirstCellofRow}
