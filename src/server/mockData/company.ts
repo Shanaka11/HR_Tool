@@ -2,6 +2,7 @@
 
 import { Company } from "@/app/Projects/page";
 import { sleep } from "@/lib/sleep";
+import { string } from "zod";
 
 const companies: Company[] = [
   {
@@ -22,8 +23,20 @@ const companies: Company[] = [
   },
 ];
 
-export const getCompanyByKey = async (name?: string) => {
+export const getCompanyByKey = async ({
+  name,
+  searchString,
+}: {
+  name?: string;
+  searchString?: string;
+}) => {
   await sleep(2000);
+  if (searchString !== undefined) {
+    return companies.filter((company) =>
+      company.name.toLowerCase().includes(searchString.toLowerCase()),
+    );
+  }
+
   if (name) {
     return companies.filter((company) => company.name === name);
   }

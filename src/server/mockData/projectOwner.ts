@@ -36,31 +36,39 @@ export const getProjectOwnerByKeys = async ({
   name?: string;
   searchString?: string;
 }) => {
-  await sleep(2000);
+  try {
+    await sleep(2000);
 
-  if (
-    name !== undefined &&
-    name !== "" &&
-    company !== undefined &&
-    company !== ""
-  ) {
-    console.log("1");
-    return projectOwners.filter(
-      (projectOwner) =>
-        projectOwner.name === name && projectOwner.company === company,
-    );
-  }
+    if (searchString !== undefined) {
+      return projectOwners.filter((projectOwner) =>
+        projectOwner.name.toLowerCase().includes(searchString.toLowerCase()),
+      );
+    }
+    if (
+      name !== undefined &&
+      name !== "" &&
+      company !== undefined &&
+      company !== ""
+    ) {
+      return projectOwners.filter(
+        (projectOwner) =>
+          projectOwner.name === name && projectOwner.company === company,
+      );
+    }
 
-  if (company !== undefined && company !== "") {
-    return projectOwners.filter(
-      (projectOwner) => projectOwner.company === company,
-    );
-  }
+    if (company !== undefined && company !== "") {
+      return projectOwners.filter(
+        (projectOwner) => projectOwner.company === company,
+      );
+    }
 
-  if (name !== undefined && name !== "") {
-    return projectOwners.filter((projectOwner) => projectOwner.name === name);
+    if (name !== undefined && name !== "") {
+      return projectOwners.filter((projectOwner) => projectOwner.name === name);
+    }
+    return projectOwners;
+  } catch (e: unknown) {
+    throw new Error("Error");
   }
-  return projectOwners;
 };
 
 export const getProjectOwnerById = async (id: string) => {

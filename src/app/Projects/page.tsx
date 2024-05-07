@@ -42,6 +42,8 @@ const projects: Project[] = [
     name: "Project B",
     contactPerson: "Alice Smith",
     age: new Date(),
+    projectOwnerCompany: "Your Company",
+    projectOwnerName: "Ela",
   },
   {
     id: "3",

@@ -87,7 +87,8 @@ type ForeignKeyCol<T> = {
 
 export type Lov = {
   id: string;
-  displayItem: Record<string, string>;
+  displayName: string;
+  displayItem?: Record<string, string>;
   item: any;
 };
 

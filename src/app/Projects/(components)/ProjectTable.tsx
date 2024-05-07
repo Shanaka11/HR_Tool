@@ -5,11 +5,13 @@ import DataTableProvider from "@/app/(components)/Table/DataTableProvider";
 import { ColumnDef } from "@/app/(components)/Table/types";
 import { sleep } from "@/lib/sleep";
 import { getDateString } from "@/lib/tableUtils";
+import { getCompanyByKey } from "@/server/mockData/company";
 import { getProjectOwnerByKeys } from "@/server/mockData/projectOwner";
 import React from "react";
 import { z } from "zod";
 
 import {
+  Company,
   Project,
   ProjectOwner,
   ProjectRoleEnum,
@@ -119,10 +121,30 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       id: "7",
       name: "projectOwnerCompany",
       header: "Company",
-      columnType: "TEXT",
-      columnPermission: "READONLY",
+      columnType: "LOV",
+      columnPermission: "UPSERTONLY",
       getValue: (row) => row.projectOwnerCompany,
       size: "MEDIUM",
+      setValue: (row, value: Company) => {
+        return {
+          ...row,
+          ["projectOwnerCompany"]: value.name,
+          ["projectOwnerName"]: "",
+        };
+      },
+      validationSchema: z.string().max(10),
+      getLovOptions: async (row, searchString) => {
+        const companies = await getCompanyByKey({
+          searchString,
+        });
+        return companies.map((company) => {
+          return {
+            id: company.id,
+            displayName: company.name,
+            item: company,
+          };
+        });
+      },
     },
     {
       id: "8",
@@ -136,7 +158,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       setValue: (row, value: ProjectOwner) => {
         return {
           ...row,
-          ["projectOwnerCompay"]: value.company,
+          ["projectOwnerCompany"]: value.company,
           ["projectOwnerName"]: value.name,
         };
       },
@@ -144,7 +166,6 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       getLovOptions: async (row, searchString) => {
         const projects = await getProjectOwnerByKeys({
           company: row.projectOwnerCompany,
-          name: row.projectOwnerName,
           searchString,
         });
         return projects.map((project) => {
@@ -154,6 +175,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
               Name: project.name,
               Company: project.company,
             },
+            displayName: project.name,
             item: project,
           };
         });

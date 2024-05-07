@@ -235,7 +235,6 @@ const handleAllowSave = (get: Getter) => {
   const isTableValid = get(isTableValidAtom);
   const tableState = get(tableStateAtom);
 
-  console.log(isTableValid);
   if (isTableValid) {
     return tableState === "READ";
   }
