@@ -16,16 +16,16 @@
 - [ ] Create cells for, text, number, date, enum, lov input types
   - [x] Text
   - [x] Number
-  - [ ] Lov / (Foreign Key)
-    - [ ] Should filter depending on already entered values to other fields when required (think of a project > sub project scenario. If a project is already selected the the love should only show connected sub projects, on the other hand if no project is selected then when selecting the sub project also set the value for the project as well) (For the first step just do this, rest we can come after we have finished the time reporting functionality)
+  - [x] Lov / (Foreign Key)
+    - [x] Should filter depending on already entered values to other fields when required (think of a project > sub project scenario. If a project is already selected the the love should only show connected sub projects, on the other hand if no project is selected then when selecting the sub project also set the value for the project as well) (For the first step just do this, rest we can come after we have finished the time reporting functionality)
     - [x] In the lov drop down, try to show additional data as well? in the case of the sub project, it should show sub project, and project names as in ifs
     - [ ] Add an option to search the lov, when this is selected should open a dialog with filters available to be searched. (Do this later)
-    - [ ] Show only small amounts of records in the dropdown (5-10) if the count exceeds that then give an option to find more, if that is used then show the dialog with filters.
+    - [ ] Show only small amounts of records in the dropdown (5-10) if the count exceeds that then give an option to find more, if that is used then show the dialog with filters.(Do This later)
   - [x] Enum (Nullable | Not Nullable)
   - [x] Date (Fix issues)
   - [x] Boolean
   - [x] Error message (Validation)
-  - [ ] Custom render element
+  - [ ] Custom render element (Do this later)
 - [ ] Handle Required fields (Styling and checking when saving)
 - [ ] Navigate when clicked on the link where applicable 
 - [ ] Handle sorting
