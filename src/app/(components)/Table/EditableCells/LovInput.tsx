@@ -16,7 +16,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { Check, ChevronDown } from "lucide-react";
+import { Check, ChevronDown, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 import CircularLoader from "../../CircularLoader";
@@ -31,6 +31,7 @@ type LovInputProps<T> = {
   firstCell?: boolean;
   colName: string;
   defaultValue?: string;
+  required?: boolean;
 };
 
 const LovInput = <T,>({
@@ -40,6 +41,7 @@ const LovInput = <T,>({
   firstCell,
   colName,
   defaultValue,
+  required,
 }: LovInputProps<T>) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
@@ -61,7 +63,7 @@ const LovInput = <T,>({
         variant: "destructive",
       });
     }
-  }, [error]);
+  }, [error, toast]);
 
   const handleValueOnChange = (selectedItemValue: string) => {
     setValue(selectedItemValue === value ? "" : selectedItemValue);
@@ -78,6 +80,8 @@ const LovInput = <T,>({
     setSearchValue("");
   };
 
+  // add a cross icon to cancel the selection
+
   return (
     <Popover open={open} onOpenChange={handleOpen}>
       <PopoverTrigger asChild>
@@ -85,7 +89,7 @@ const LovInput = <T,>({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={`w-full h-12 ${(value === undefined || value === null || value === "") && defaultValue === undefined ? "justify-end" : "justify-between"} rounded-none focus:ring-0 focus-visible:ring-0 border-t-0 border-b-0 border-r border-l-0 focus:border focus:border-primary ${firstCell ? "border-l" : ""}`}
+          className={`w-full h-12 ${(value === undefined || value === null || value === "") && defaultValue === undefined ? "justify-end" : "justify-between"} rounded-none focus:ring-0 focus-visible:ring-0 border-t-0 border-b-0 border-r border-l-0 focus:border focus:border-primary ${firstCell ? "border-l" : ""} font-normal`}
         >
           {value !== ""
             ? data?.find((option) => option.id === value)?.displayName
@@ -95,8 +99,7 @@ const LovInput = <T,>({
       </PopoverTrigger>
       <PopoverContent className="w-full p-0">
         <Command
-          filter={(value, serach) => {
-            // Se we do the filtering on the server side we will not filter anything here
+          filter={() => {
             return 1;
           }}
         >
