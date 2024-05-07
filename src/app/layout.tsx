@@ -8,6 +8,7 @@ import { getServerSession } from "next-auth";
 
 import MainPageLayout from "./(components)/MainPageLayout";
 import TitleBar from "./(components)/Navigation/TitleBar";
+import Providers from "./(components)/Providers";
 import SessionProvider from "./(components)/SessionProvider";
 import { UserProvder } from "./(components)/UserProvider";
 
@@ -30,11 +31,13 @@ export default async function RootLayout({
       <body className={inter.className}>
         <SessionProvider session={session}>
           <UserProvder userInfo={{ name: session?.user?.name }}>
-            <Toaster />
-            <main className="grid grid-rows-[3.5rem_1fr] h-dvh">
-              <TitleBar />
-              <MainPageLayout>{children}</MainPageLayout>
-            </main>
+            <Providers>
+              <Toaster />
+              <main className="grid grid-rows-[3.5rem_1fr] h-dvh">
+                <TitleBar />
+                <MainPageLayout>{children}</MainPageLayout>
+              </main>
+            </Providers>
           </UserProvder>
         </SessionProvider>
       </body>

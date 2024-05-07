@@ -184,6 +184,10 @@ const handleMarkCreate = (get: Getter, set: Setter) => {
   const newRowDataItem: any = {};
   const columns = get(colsAtom);
   columns.forEach((column) => {
+    if (column.columnPermission === "READONLY") {
+      newRowDataItem[column.name] = "";
+      return;
+    }
     newRowDataItem[column.name] = column.defaultValue;
   });
   set(newRowsAtom, (prev) => [

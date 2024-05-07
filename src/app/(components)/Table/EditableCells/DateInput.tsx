@@ -2,17 +2,17 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getDateString } from "@/lib/tableUtils";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@radix-ui/react-popover";
 import { CalendarIcon } from "lucide-react";
 import React, { useState } from "react";
 
@@ -34,7 +34,9 @@ export const DateInput = ({
   firstCell,
 }: DateProps) => {
   const [value, setValue] = useState<string>(
-    defaultValue !== undefined ? defaultValue.toString() : "",
+    defaultValue !== undefined && defaultValue !== null
+      ? defaultValue.toString()
+      : "",
   );
 
   const [date, setDate] = useState<Date | undefined>(new Date(defaultValue));
@@ -77,13 +79,12 @@ export const DateInput = ({
               <CalendarIcon className="h-4 w-4" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent>
+          <PopoverContent className="w-auto p-0">
             <Calendar
               mode="single"
               selected={date}
               onSelect={handleSetDate}
               initialFocus
-              className="bg-white border"
             />
           </PopoverContent>
         </Popover>
