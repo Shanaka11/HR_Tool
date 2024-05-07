@@ -5,10 +5,16 @@ import DataTableProvider from "@/app/(components)/Table/DataTableProvider";
 import { ColumnDef } from "@/app/(components)/Table/types";
 import { sleep } from "@/lib/sleep";
 import { getDateString } from "@/lib/tableUtils";
+import { getProjectOwnerByKeys } from "@/server/mockData/projectOwner";
 import React from "react";
 import { z } from "zod";
 
-import { Project, ProjectRoleEnum, ProjectRoleEnumType } from "../page";
+import {
+  Project,
+  ProjectOwner,
+  ProjectRoleEnum,
+  ProjectRoleEnumType,
+} from "../page";
 
 type ProjectTableProps = {
   data: Project[];
@@ -107,6 +113,51 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       },
       validationSchema: ProjectRoleEnum.optional(),
       enumValues: ProjectRoleEnum.options,
+    },
+    {
+      // TODO: this should be an lov from the company entity, whenever we select a company from here owner name should be reset to null
+      id: "7",
+      name: "projectOwnerCompany",
+      header: "Company",
+      columnType: "TEXT",
+      columnPermission: "READONLY",
+      getValue: (row) => row.projectOwnerCompany,
+      size: "MEDIUM",
+    },
+    {
+      id: "8",
+      name: "projectOwnerName",
+      header: "Owner Name",
+      columnType: "LOV",
+      columnPermission: "UPSERTONLY",
+      getValue: (row) => row?.projectOwnerName,
+      size: "MEDIUM",
+      // Value should be a ProjectOwner type
+      setValue: (row, value: ProjectOwner) => {
+        return {
+          ...row,
+          ["projectOwnerCompay"]: value.company,
+          ["projectOwnerName"]: value.name,
+        };
+      },
+      validationSchema: z.string().max(10),
+      getLovOptions: async (row, searchString) => {
+        const projects = await getProjectOwnerByKeys({
+          company: row.projectOwnerCompany,
+          name: row.projectOwnerName,
+          searchString,
+        });
+        return projects.map((project) => {
+          return {
+            id: project.id,
+            displayItem: {
+              Name: project.name,
+              Company: project.company,
+            },
+            item: project,
+          };
+        });
+      },
     },
   ];
 

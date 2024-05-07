@@ -18,8 +18,9 @@
   - [x] Number
   - [ ] Lov / (Foreign Key)
     - [ ] Should filter depending on already entered values to other fields when required (think of a project > sub project scenario. If a project is already selected the the love should only show connected sub projects, on the other hand if no project is selected then when selecting the sub project also set the value for the project as well) (For the first step just do this, rest we can come after we have finished the time reporting functionality)
-    - [ ] In the love drop down, try to show additional data as well? in the case of the sub project, it should show sub project, and project names as in ifs
+    - [x] In the lov drop down, try to show additional data as well? in the case of the sub project, it should show sub project, and project names as in ifs
     - [ ] Add an option to search the lov, when this is selected should open a dialog with filters available to be searched. (Do this later)
+    - [ ] Show only small amounts of records in the dropdown (5-10) if the count exceeds that then give an option to find more, if that is used then show the dialog with filters.
   - [x] Enum (Nullable | Not Nullable)
   - [x] Date (Fix issues)
   - [x] Boolean
@@ -29,6 +30,7 @@
 - [ ] Navigate when clicked on the link where applicable 
 - [ ] Handle sorting
 - [ ] Handle filtering
+- [x] Integrate react query
 - [ ] Try to optimize re rendering in tables
 - [ ] Create final table UI
 - [ ] Create Alternate table UI/ the shadcn one will be the list view and the alternate on will be the table view (like in ifs)

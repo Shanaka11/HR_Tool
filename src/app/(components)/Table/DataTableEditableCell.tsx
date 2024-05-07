@@ -6,6 +6,7 @@ import { isTableLoadingAtom, isTableValidAtom } from "./DataTableStore";
 import BooleanInput from "./EditableCells/BooleanInput";
 import DateInput from "./EditableCells/DateInput";
 import EnumInput from "./EditableCells/EnumInput";
+import LovInput from "./EditableCells/LovInput";
 import Number from "./EditableCells/Number";
 import Text from "./EditableCells/Text";
 import { ColumnDef, RowDef } from "./types";
@@ -112,7 +113,21 @@ const DataTableEditableCell = <T,>({
   };
 
   if (column.columnPermission === "READONLY") {
-    return null;
+    return (
+      <div
+        className={`w-full h-12 rounded-none focus:ring-0 focus-visible:ring-0 border-t-0 border-b-0 border-r border-l-0 focus:border focus:border-primary ${isFirstCellofRow ? "border-l" : ""}`}
+      ></div>
+    );
+  }
+
+  if (column.columnType === "LOV") {
+    return (
+      <LovInput
+        row={row}
+        getLovOptions={column.getLovOptions}
+        firstCell={isFirstCellofRow}
+      />
+    );
   }
 
   if (column.columnType === "ENUM") {
