@@ -6,6 +6,7 @@ import { isTableLoadingAtom, isTableValidAtom } from "./DataTableStore";
 import BooleanInput from "./EditableCells/BooleanInput";
 import DateInput from "./EditableCells/DateInput";
 import EnumInput from "./EditableCells/EnumInput";
+import LovInput from "./EditableCells/LovInput";
 import Number from "./EditableCells/Number";
 import Text from "./EditableCells/Text";
 import { ColumnDef, RowDef } from "./types";
@@ -111,8 +112,38 @@ const DataTableEditableCell = <T,>({
     }
   };
 
+  const handleLovUpdate = (item: any) => {
+    if (item === undefined) throw new Error("Item is null");
+
+    if (column.columnType !== "LOV")
+      throw new Error("handleLovUpdate is used in a non lov column");
+    if (column.columnPermission === "READONLY")
+      throw new Error("handleLovUpdate is used in a read only col");
+
+    updateRow(column.setValue(row.dataItem, item));
+  };
+
   if (column.columnPermission === "READONLY") {
-    return null;
+    return (
+      <div
+        className={`w-full h-12  rounded-none focus:ring-0 focus-visible:ring-0 border-t-0 border-b-0 border-r border-l-0 focus:border focus:border-primary ${isFirstCellofRow ? "border-l" : ""} align-middle grid items-center p-4`}
+      >
+        {column.getValue(row.dataItem)}
+      </div>
+    );
+  }
+
+  if (column.columnType === "LOV") {
+    return (
+      <LovInput
+        row={row}
+        getLovOptions={column.getLovOptions}
+        handleOnBlur={handleLovUpdate}
+        firstCell={isFirstCellofRow}
+        colName={column.name}
+        defaultValue={column.getValue(row.dataItem) as string}
+      />
+    );
   }
 
   if (column.columnType === "ENUM") {

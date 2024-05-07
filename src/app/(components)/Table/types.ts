@@ -1,17 +1,13 @@
-import { ValueOf } from "@/lib/valueOf";
-import {
-  EnumLike,
-  nullable,
-  ZodBoolean,
-  ZodDate,
-  ZodEnum,
-  ZodEnumDef,
-  ZodNumber,
-  ZodSchema,
-  ZodString,
-} from "zod";
+import { ZodBoolean, ZodDate, ZodNumber, ZodSchema, ZodString } from "zod";
 
-export type ColumnType = "TEXT" | "NUMBER" | "DATE" | "BOOLEAN" | "ENUM";
+export type ColumnType =
+  | "TEXT"
+  | "NUMBER"
+  | "DATE"
+  | "BOOLEAN"
+  | "ENUM"
+  | "LOV";
+
 export type ColPermission =
   | "READONLY"
   | "INSERTONLY"
@@ -21,7 +17,14 @@ export type ColPermission =
 export type ColumnDef<T> =
   | ({ columnPermission: "READONLY" } & BaseColDef<T>)
   | (BaseColDef<T> &
-      (StringCol<T> | NumberCol<T> | DateCol<T> | BoolCol<T> | EnumCol<T>));
+      (
+        | StringCol<T>
+        | NumberCol<T>
+        | DateCol<T>
+        | BoolCol<T>
+        | EnumCol<T>
+        | ForeignKeyCol<T>
+      ));
 
 type BaseColDef<T> = {
   name: string; // Column identifier
@@ -35,6 +38,7 @@ type BaseColDef<T> = {
   columnType: ColumnType;
   columnPermission: ColPermission;
   mandatory?: boolean;
+  isForeignKey?: boolean;
 };
 
 type StringCol<T> = {
@@ -65,13 +69,27 @@ type BoolCol<T> = {
   validationSchema: ZodBoolean;
 };
 
-// Figureout a way to handle enum cols
 type EnumCol<T> = {
   columnType: "ENUM";
   setValue: (row: T, value?: string) => T;
   defaultValue?: string;
   validationSchema: ZodSchema;
   enumValues: string[];
+};
+
+type ForeignKeyCol<T> = {
+  columnType: "LOV";
+  setValue: (row: T, value?: any) => T;
+  getLovOptions: (row: T, searchString?: string) => Promise<Lov[]>;
+  validationSchema: ZodSchema;
+  defaultValue?: string;
+};
+
+export type Lov = {
+  id: string;
+  displayName: string;
+  displayItem?: Record<string, string>;
+  item: any;
 };
 
 export type RowDef<T> = {

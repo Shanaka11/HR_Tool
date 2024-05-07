@@ -12,8 +12,6 @@ export const complexTextSearch = (source: string, target: string) => {
   let sourceIndex = 0;
   let targetIndex = 0;
 
-  console.log(source);
-
   while (sourceIndex < sourceWords.length && targetIndex < targetWords.length) {
     if (sourceWords[sourceIndex].startsWith(targetWords[targetIndex])) {
       sourceIndex++;
