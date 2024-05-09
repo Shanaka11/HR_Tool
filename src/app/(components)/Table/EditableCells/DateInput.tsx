@@ -96,14 +96,31 @@ export const DateInput = ({
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger className="w-full">
-          <Input
-            className={`w-full h-12 rounded-none focus-visible:ring-0  focus:border focus:border-destructive bg-red-300 ${firstCell ? "border-l" : ""}`}
-            onBlur={() => handleOnBlur(value)}
-            disabled={disabled}
-            value={value}
-            onChange={(event) => setValue(event.target.value)}
-            type="date"
-          />
+          <div className="flex relative items-center">
+            <Input
+              className={`w-full h-12 rounded-none focus-visible:ring-0  focus:border focus:border-destructive bg-red-300 ${firstCell ? "border-l" : ""}`}
+              onBlur={() => handleOnBlur(value)}
+              disabled={disabled}
+              value={value}
+              onChange={(event) => setValue(event.target.value)}
+              type="date"
+            />
+            <Popover open={calenderOpen} onOpenChange={setCalenderOpen}>
+              <PopoverTrigger asChild>
+                <Button className="absolute right-2 h-7 w-8" size="icon">
+                  <CalendarIcon className="h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={handleSetDate}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
         </TooltipTrigger>
         <TooltipContent className="text-xs bg-destructive text-white">
           <p>{error}</p>
