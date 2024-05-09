@@ -113,7 +113,7 @@ const DataTableEditableCell = <T,>({
   };
 
   const handleLovUpdate = (item: any) => {
-    if (item === undefined) throw new Error("Item is null");
+    // if (item === undefined) throw new Error("Item is null");
 
     if (column.columnType !== "LOV")
       throw new Error("handleLovUpdate is used in a non lov column");

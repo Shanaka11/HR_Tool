@@ -81,21 +81,39 @@ const LovInput = <T,>({
   };
 
   // add a cross icon to cancel the selection
+  const handleCancelSelection = (
+    event: React.MouseEvent<SVGSVGElement, MouseEvent>,
+  ) => {
+    event.stopPropagation();
+    setValue("");
+    handleOnBlur();
+  };
 
   return (
     <Popover open={open} onOpenChange={handleOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
+        <div
+          // variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={`w-full h-12 ${(value === undefined || value === null || value === "") && defaultValue === undefined ? "justify-end" : "justify-between"} rounded-none focus:ring-0 focus-visible:ring-0 border-t-0 border-b-0 border-r border-l-0 focus:border focus:border-primary ${firstCell ? "border-l" : ""} font-normal`}
+          className={`w-full  bg-background h-12 p-4 ${(value === undefined || value === null || value === "") && defaultValue === undefined ? "justify-end" : "justify-between"} rounded-none focus:ring-0 focus-visible:ring-0 border-t-0 border-b-0 border-r border-l-0 focus:border focus:border-primary ${firstCell ? "border-l" : ""} font-normal flex items-center group`}
         >
-          {value !== ""
-            ? data?.find((option) => option.id === value)?.displayName
-            : defaultValue}
-          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
+          <div>
+            {value !== ""
+              ? data?.find((option) => option.id === value)?.displayName
+              : defaultValue}
+          </div>
+          <div className="flex gap-1">
+            {value !== "" && (
+              <X
+                className="ml-2 h-4 w-4 shrink-0 opacity-50 hover:opacity-100 cursor-pointer hidden group-hover:block"
+                role="button"
+                onClick={(event) => handleCancelSelection(event)}
+              />
+            )}
+            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50 hover:opacity-100 cursor-pointer" />
+          </div>
+        </div>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0">
         <Command

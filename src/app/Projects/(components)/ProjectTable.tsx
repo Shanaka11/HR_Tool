@@ -124,11 +124,11 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       columnType: "LOV",
       columnPermission: "UPSERTONLY",
       getValue: (row) => row.projectOwnerCompany,
-      size: "MEDIUM",
-      setValue: (row, value: Company) => {
+      size: "LARGE",
+      setValue: (row, value?: Company) => {
         return {
           ...row,
-          ["projectOwnerCompany"]: value.name,
+          ["projectOwnerCompany"]: value?.name,
           ["projectOwnerName"]: "",
         };
       },
@@ -153,13 +153,13 @@ const ProjectTable: React.FC<ProjectTableProps> = ({ data }) => {
       columnType: "LOV",
       columnPermission: "UPSERTONLY",
       getValue: (row) => row?.projectOwnerName,
-      size: "MEDIUM",
+      size: "LARGE",
       // Value should be a ProjectOwner type
-      setValue: (row, value: ProjectOwner) => {
+      setValue: (row, value?: ProjectOwner) => {
         return {
           ...row,
-          ["projectOwnerCompany"]: value.company,
-          ["projectOwnerName"]: value.name,
+          ["projectOwnerCompany"]: value?.company ?? row.projectOwnerCompany,
+          ["projectOwnerName"]: value?.name ?? "",
         };
       },
       validationSchema: z.string().max(10),
