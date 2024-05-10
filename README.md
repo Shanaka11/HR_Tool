@@ -24,11 +24,12 @@
     - [ ] Show only small amounts of records in the dropdown (5-10) if the count exceeds that then give an option to find more, if that is used then show the dialog with filters.(Do This later)
   - [x] Enum (Nullable | Not Nullable)
   - [x] Date (Fix issues)
+    - [x] Place the calender widget correctly when the field is in an error state (Currently its showing button inside button error)
   - [x] Boolean
   - [x] Error message (Validation)
   - [ ] Custom render element (Do this later)
   - [ ] Add keyboard navigation when in edit / new modes (i.e enter a value and pressing tab would move you to the next cell) (Do this later)
-- [ ] Handle Required fields (Styling and checking when saving)
+- [x] Handle Required fields (Styling)
 - [ ] Navigate when clicked on the link where applicable 
 - [ ] Handle sorting
 - [ ] Handle filtering

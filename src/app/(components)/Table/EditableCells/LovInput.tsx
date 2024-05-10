@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -21,8 +20,8 @@ import React, { useEffect, useState } from "react";
 
 import CircularLoader from "../../CircularLoader";
 import { Lov, RowDef } from "../types";
-import LovInputSearch from "./LovInputSearch";
-import LovItem from "./LovItem";
+import LovInputSearch from "./Lov/LovInputSearch";
+import LovItem from "./Lov/LovItem";
 
 type LovInputProps<T> = {
   row: RowDef<T>;

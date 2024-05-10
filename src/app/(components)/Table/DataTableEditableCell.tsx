@@ -37,7 +37,11 @@ const DataTableEditableCell = <T,>({
     let parsedValue: any = value;
 
     if (column.columnType === "DATE") {
-      parsedValue = new Date(value);
+      if (value === "") {
+        parsedValue = undefined;
+      } else {
+        parsedValue = new Date(value);
+      }
     }
     if (column.columnType === "NUMBER") {
       parsedValue = +value;
@@ -155,6 +159,7 @@ const DataTableEditableCell = <T,>({
         options={column.enumValues}
         firstCell={isFirstCellofRow}
         error={error}
+        required={column.required}
       />
     );
   }
@@ -178,6 +183,7 @@ const DataTableEditableCell = <T,>({
         disabled={isTableLoading}
         error={error}
         firstCell={isFirstCellofRow}
+        required={column.required}
       />
     );
   }
@@ -189,7 +195,7 @@ const DataTableEditableCell = <T,>({
         handleOnBlur={handleValueUpdate}
         disabled={isTableLoading}
         error={error}
-        required={false}
+        required={column.required}
         firstCell={isFirstCellofRow}
       />
     );
@@ -201,7 +207,7 @@ const DataTableEditableCell = <T,>({
         handleOnBlur={handleValueUpdate}
         disabled={isTableLoading}
         error={error}
-        required={false}
+        required={column.required}
         firstCell={isFirstCellofRow}
       />
     );

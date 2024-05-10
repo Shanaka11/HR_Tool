@@ -1,4 +1,11 @@
-import { ZodBoolean, ZodDate, ZodNumber, ZodSchema, ZodString } from "zod";
+import {
+  ZodBoolean,
+  ZodDate,
+  ZodNumber,
+  ZodOptional,
+  ZodSchema,
+  ZodString,
+} from "zod";
 
 export type ColumnType =
   | "TEXT"
@@ -45,21 +52,24 @@ type StringCol<T> = {
   columnType: "TEXT";
   setValue: (row: T, value?: string) => T;
   defaultValue?: string;
-  validationSchema: ZodString;
+  validationSchema: ZodString | ZodOptional<ZodString>;
+  required?: boolean;
 };
 
 type NumberCol<T> = {
   columnType: "NUMBER";
   setValue: (row: T, value?: number) => T;
   defaultValue?: number;
-  validationSchema: ZodNumber;
+  validationSchema: ZodNumber | ZodOptional<ZodNumber>;
+  required?: boolean;
 };
 
 type DateCol<T> = {
   columnType: "DATE";
   setValue: (row: T, value?: Date) => T;
   defaultValue?: Date;
-  validationSchema: ZodDate;
+  validationSchema: ZodDate | ZodOptional<ZodDate>;
+  required?: boolean;
 };
 
 type BoolCol<T> = {
@@ -67,6 +77,7 @@ type BoolCol<T> = {
   setValue: (row: T, value?: boolean) => T;
   defaultValue?: boolean;
   validationSchema: ZodBoolean;
+  required?: boolean;
 };
 
 type EnumCol<T> = {
@@ -75,6 +86,7 @@ type EnumCol<T> = {
   defaultValue?: string;
   validationSchema: ZodSchema;
   enumValues: string[];
+  required?: boolean;
 };
 
 type ForeignKeyCol<T> = {
@@ -83,6 +95,7 @@ type ForeignKeyCol<T> = {
   getLovOptions: (row: T, searchString?: string) => Promise<Lov[]>;
   validationSchema: ZodSchema;
   defaultValue?: string;
+  required?: boolean;
 };
 
 export type Lov = {
